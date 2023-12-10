@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Balta.Localizacao.Domain\Balta.Localizacao.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
