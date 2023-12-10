@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\src\Balta.Localizacao.Core\Balta.Localizacao.Core.csproj" />
+  </ItemGroup>
+
 </Project>
