@@ -25,10 +25,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Data\" />
-    <Folder Include="Messages\" />
-    <Folder Include="Mediatr\" />
-  </ItemGroup>
-
 </Project>
