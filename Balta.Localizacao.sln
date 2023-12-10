@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Balta.Localizacao.Core", "src\Balta.Localizacao.Core\Balta.Localizacao.Core.csproj", "{B7CE933B-E7A5-4572-85EC-952D28CA6757}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Balta.Localizacao.Core", "src\Balta.Localizacao.Core\Balta.Localizacao.Core.csproj", "{B7CE933B-E7A5-4572-85EC-952D28CA6757}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Balta.Localizacao.PresentationLayer", "src\Balta.Localizacao.PresentationLayer\Balta.Localizacao.PresentationLayer.csproj", "{EE7EE25E-4525-47D1-9C59-9795AA9E248E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{B7CE933B-E7A5-4572-85EC-952D28CA6757}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B7CE933B-E7A5-4572-85EC-952D28CA6757}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B7CE933B-E7A5-4572-85EC-952D28CA6757}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE7EE25E-4525-47D1-9C59-9795AA9E248E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE7EE25E-4525-47D1-9C59-9795AA9E248E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE7EE25E-4525-47D1-9C59-9795AA9E248E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE7EE25E-4525-47D1-9C59-9795AA9E248E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
