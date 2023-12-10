@@ -8,12 +8,12 @@ namespace Balta.Localizacao.Core.Messages
     {
         public ValidationResult ValidationResult { get; private set; }
 
-        protected CommandHandler() 
+        protected CommandHandler()
         {
             ValidationResult = new ValidationResult();
         }
 
-        public virtual void AdicionarErro(string msgErro) 
+        public virtual void AdicionarErro(string msgErro)
         {
             ValidationResult.Errors.Add(new ValidationFailure(nameof(CommandHandler), msgErro));
         }
