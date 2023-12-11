@@ -1,4 +1,6 @@
-﻿using Balta.Localizacao.Core.Messages;
+﻿using Balta.Localizacao.ApplicationLayer.ViewModels;
+using Balta.Localizacao.Core.Identity;
+using Balta.Localizacao.Core.Messages;
 using Balta.Localizacao.Domain.DomainObjects;
 using FluentValidation.Results;
 using MediatR;
@@ -16,15 +18,15 @@ namespace Balta.Localizacao.ApplicationLayer.Commands.AutenticacaoCommands
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
-        private readonly AppSettings _appSettings;
+        private readonly AppSetings _appSettings;
 
         public AutenticacaoCommandHandler(SignInManager<IdentityUser> signInManager,
                                           UserManager<IdentityUser> userManager,
-                                          IOptions<AppSettings> appSettings)
+                                          IOptions<AppSetings> appSettings)
         {
             _signInManager = signInManager;
             _userManager = userManager;
-            _appSettings = appSettings;
+            _appSettings = appSettings.Value;
         }
 
         public async Task<ValidationResult> Handle(NovoUsuarioCommand message, CancellationToken cancellationToken)
