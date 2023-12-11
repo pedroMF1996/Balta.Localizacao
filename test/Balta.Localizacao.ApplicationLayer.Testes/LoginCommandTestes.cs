@@ -1,26 +1,24 @@
 ﻿using Balta.Localizacao.ApplicationLayer.Commands.AutenticacaoCommands;
 using Balta.Localizacao.ApplicationLayer.Commands.AutenticacaoCommands.Validations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
 
 namespace Balta.Localizacao.ApplicationLayer.Testes
 {
-    public class LoginCommandTestes
+    [Collection(nameof(CommandBogusFixtureCollection))]
+    public class LoginCommandTestes : IClassFixture<CommandBogusFixture>
     {
+        private readonly CommandBogusFixture _commandBogusFixture;
+
+        public LoginCommandTestes(CommandBogusFixture commandBogusFixture)
+        {
+            _commandBogusFixture = commandBogusFixture;
+        }
+
         [Fact(DisplayName = "LoginCommand instanciado sem erros")]
-        [Trait("Categoria", "Application Layer")]
+        [Trait("Categoria", "Command")]
         public void LoginCommand_CriarCommand_CriarCommandComSucesso()
         {
             // Arrange
-            var command = new LoginCommand()
-            {
-                Email = "pmfrp@hotmail.com",
-                Password = "abcd@1234"
-            };
+            var command = _commandBogusFixture.GerarLoginCommand();
 
             // Act
             var result = command.EhValido();
@@ -30,7 +28,7 @@ namespace Balta.Localizacao.ApplicationLayer.Testes
         }
 
         [Fact(DisplayName = "NovoUsuarioCommand instanciado com erros")]
-        [Trait("Categoria", "Application Layer")]
+        [Trait("Categoria", "Command")]
         public void NovoUsuarioCommand_CriarCommand_CriarCommandComFalha()
         {
             // Arrange

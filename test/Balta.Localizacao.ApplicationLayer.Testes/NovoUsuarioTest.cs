@@ -1,22 +1,26 @@
 using Balta.Localizacao.ApplicationLayer.Commands.AutenticacaoCommands;
 using Balta.Localizacao.ApplicationLayer.Commands.AutenticacaoCommands.Validations;
+using Bogus.DataSets;
+using Bogus;
 
 namespace Balta.Localizacao.ApplicationLayer.Testes
 {
-    public class NovoUsuarioTest
+    [Collection(nameof(CommandBogusFixtureCollection))]
+    public class NovoUsuarioTest : IClassFixture<CommandBogusFixture>
     {
+        private readonly CommandBogusFixture _commandBogusFixture;
+
+        public NovoUsuarioTest(CommandBogusFixture commandBogusFixture)
+        {
+            _commandBogusFixture = commandBogusFixture;
+        }
+
         [Fact(DisplayName = "NovoUsuarioCommand instanciado sem erros")]
-        [Trait("Categoria", "Application Layer")]
+        [Trait("Categoria", "Command")]
         public void NovoUsuarioCommand_CriarCommand_CriarCommandComSucesso()
         {
             // Arrange
-            var command = new NovoUsuarioCommand()
-            {
-                Nome = "Pedro",
-                Email = "pmfrp@hotmail.com",
-                Password = "abcd@123",
-                ConfirmPassword = "abcd@123"
-            };
+            var command = _commandBogusFixture.GerarNovoUsuarioCommand();
 
 
             // Act
@@ -28,7 +32,7 @@ namespace Balta.Localizacao.ApplicationLayer.Testes
         }
 
         [Fact(DisplayName = "NovoUsuarioCommand instanciado com erros")]
-        [Trait("Categoria", "Application Layer")]
+        [Trait("Categoria", "Command")]
         public void NovoUsuarioCommand_CriarCommand_CriarCommandComFalha()
         {
             // Arrange

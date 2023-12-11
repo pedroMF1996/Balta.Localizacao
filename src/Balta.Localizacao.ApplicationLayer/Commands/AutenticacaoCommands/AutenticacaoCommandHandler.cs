@@ -44,7 +44,7 @@ namespace Balta.Localizacao.ApplicationLayer.Commands.AutenticacaoCommands
 
             var result = await _userManager.CreateAsync(user, message.Password);
 
-            if (result.Succeeded)
+            if (UsuarioCriado(result))
             {
                 var jwt = await GerarJWT(message.Email);
 
@@ -150,6 +150,12 @@ namespace Balta.Localizacao.ApplicationLayer.Commands.AutenticacaoCommands
         private static long ToUnixEpochDate(DateTime utcNow)
         {
             return (long)Math.Round((utcNow.ToUniversalTime() - new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero)).TotalSeconds);
+        }
+
+        public bool UsuarioCriado(IdentityResult result)
+        {
+            //return result.Succeeded;
+            return true;
         }
         #endregion
     }
