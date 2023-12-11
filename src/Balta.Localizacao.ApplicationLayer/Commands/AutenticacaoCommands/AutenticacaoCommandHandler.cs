@@ -14,7 +14,8 @@ using System.Text;
 namespace Balta.Localizacao.ApplicationLayer.Commands.AutenticacaoCommands
 {
     public class AutenticacaoCommandHandler : CommandHandler,
-                                              IRequestHandler<NovoUsuarioCommand, ValidationResult>
+                                              IRequestHandler<NovoUsuarioCommand, ValidationResult>,
+                                              IRequestHandler<LoginCommand, ValidationResult>
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
@@ -54,6 +55,29 @@ namespace Balta.Localizacao.ApplicationLayer.Commands.AutenticacaoCommands
             {
                 AdicionarErro(error.Description);
             }
+
+            return ValidationResult;
+        }
+
+        public async Task<ValidationResult> Handle(LoginCommand message, CancellationToken cancellationToken)
+        {
+            if (!message.EhValido())
+                return message.ValidationResult;
+
+            var result = await _signInManager.PasswordSignInAsync(message.Email, message.Password, false, true);
+
+            if (result.Succeeded)
+            {
+                await GerarJWT(message.Email);
+            }
+
+            if (result.IsLockedOut)
+            {
+                AdicionarErro("Usuario temporariamente bloqueado por tentativas invalidas");
+                return ValidationResult;
+            }
+
+            AdicionarErro("Usuario ou senha incorretos");
 
             return ValidationResult;
         }
@@ -126,7 +150,7 @@ namespace Balta.Localizacao.ApplicationLayer.Commands.AutenticacaoCommands
         private static long ToUnixEpochDate(DateTime utcNow)
         {
             return (long)Math.Round((utcNow.ToUniversalTime() - new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero)).TotalSeconds);
-        } 
+        }
         #endregion
     }
 }
