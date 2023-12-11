@@ -16,14 +16,12 @@ namespace Balta.Localizacao.ApplicationLayer.Commands.AutenticacaoCommands.Valid
         {
             RuleFor(c => c.Email)
                 .NotEmpty()
-                .NotNull()
                 .WithMessage(EmailRequiredErrorMessage)
                 .EmailAddress()
                 .WithMessage(EmailAddressErrorMessage);
 
             RuleFor(c => c.Password)
                 .NotEmpty()
-                .NotNull()
                 .WithMessage(PasswordRequiredErrorMessage)
                 .MaximumLength(MAX_LENGHT_PASSWORD)
                 .MinimumLength(MIN_LENGHT_PASSWORD)
