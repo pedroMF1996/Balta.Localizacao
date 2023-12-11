@@ -45,8 +45,7 @@ namespace Balta.Localizacao.ApplicationLayer.Commands.AutenticacaoCommands
 
             if (result.Succeeded)
             {
-                await _userManager.DeleteAsync(user);
-                await GerarJWT(message.Email);
+                var jwt = await GerarJWT(message.Email);
 
                 return ValidationResult;
             }
