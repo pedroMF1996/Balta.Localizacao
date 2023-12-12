@@ -1,4 +1,6 @@
 ﻿using Balta.Localizacao.Core.DomainObjects;
+using Balta.Localizacao.Domain.Entities.Validations;
+using Microsoft.AspNetCore.Http.HttpResults;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +16,7 @@ namespace Balta.Localizacao.Domain.Entities
         public string CodigoUf { get; private set; }
         public Estado Estado { get; private set; }
 
-        public Municipio()
+        protected Municipio()
         {
         }
 
@@ -32,7 +34,10 @@ namespace Balta.Localizacao.Domain.Entities
 
         public override bool EhValido()
         {
-            return base.EhValido();
+            ValidationResult = new MunicipioValidation().Validate(this);
+            return ValidationResult.IsValid;
+
+
         }
     }
 }
