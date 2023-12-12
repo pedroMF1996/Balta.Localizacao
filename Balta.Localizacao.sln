@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Balta.Localizacao.DAL", "sr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Balta.Localizacao.ApplicationLayer", "src\Balta.Localizacao.ApplicationLayer\Balta.Localizacao.ApplicationLayer.csproj", "{3E2C610C-7090-4816-898C-BE341AE4F51E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Balta.Localizacao.ApplicationLayer.Testes", "test\Balta.Localizacao.ApplicationLayer.Testes\Balta.Localizacao.ApplicationLayer.Testes.csproj", "{71683A79-DCDB-48D5-A8C5-12ADF41557A0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{3E2C610C-7090-4816-898C-BE341AE4F51E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E2C610C-7090-4816-898C-BE341AE4F51E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E2C610C-7090-4816-898C-BE341AE4F51E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71683A79-DCDB-48D5-A8C5-12ADF41557A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71683A79-DCDB-48D5-A8C5-12ADF41557A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71683A79-DCDB-48D5-A8C5-12ADF41557A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71683A79-DCDB-48D5-A8C5-12ADF41557A0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
