@@ -5,7 +5,7 @@ namespace Balta.Localizacao.Core.DomainObjects
     public abstract class Entity
     {
         public Guid Id { get; private set; }
-        public ValidationResult ValidationResult { get; private set; }
+        public ValidationResult ValidationResult { get; set; }
 
         protected Entity()
         {
