@@ -1,7 +1,9 @@
 ﻿using Balta.Localizacao.ApplicationLayer.Commands.AutenticacaoCommands;
+using Balta.Localizacao.Core.Identity;
 using Bogus;
 using Bogus.DataSets;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 using Moq;
 
 namespace Balta.Localizacao.ApplicationLayer.Testes
@@ -24,9 +26,7 @@ namespace Balta.Localizacao.ApplicationLayer.Testes
         public async Task NovoUsuarioCommand_NovoUsuario_DeveAdicionarComSucesso()
         {
             // Arrange
-            var command = _commandBogusFixture.GerarNovoUsuarioCommand();
-            var commandHandler = _usuarioBogusFixture.AutoMocker.CreateInstance<AutenticacaoCommandHandler>();
-
+            var appSetings = Options.Create(_usuarioBogusFixture.GerarAppSettings());
             
             var _userManager = _usuarioBogusFixture.AutoMocker.GetMock<UserManager<IdentityUser>>();
             var identityresult = _usuarioBogusFixture.AutoMocker.GetMock<IdentityResult>().Object;
@@ -43,6 +43,9 @@ namespace Balta.Localizacao.ApplicationLayer.Testes
             _userManager.Setup(u => u.GetRolesAsync(It.IsAny<IdentityUser>()))
                 .ReturnsAsync(_usuarioBogusFixture.GerarListaRoleVazia());
 
+
+            var command = _commandBogusFixture.GerarNovoUsuarioCommand();
+            var commandHandler = new AutenticacaoCommandHandler(It.IsAny<SignInManager<IdentityUser>>(), _userManager.Object,  appSetings );
 
             // Act
             var result = await commandHandler.Handle(command, CancellationToken.None);
