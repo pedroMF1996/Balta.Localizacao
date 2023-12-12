@@ -6,7 +6,7 @@ namespace Balta.Localizacao.Core.Messages
     public abstract class Command : Message, IRequest<ValidationResult>
     {
         public DateTime TimeStamp { get; private set; }
-        public ValidationResult ValidationResult { get; private set; }
+        public ValidationResult ValidationResult { get;  set; }
         protected Command() : base(nameof(Command))
         {
             ValidationResult = new ValidationResult();
