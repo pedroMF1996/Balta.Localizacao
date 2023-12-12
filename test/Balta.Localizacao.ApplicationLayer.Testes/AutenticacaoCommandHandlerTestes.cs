@@ -19,7 +19,7 @@ namespace Balta.Localizacao.ApplicationLayer.Testes
             _commandBogusFixture = commandBogusFixture;
         }
 
-        [Fact(DisplayName = "Novo Usuario Deve Adicionar Com Sucesso")]
+        [Fact(DisplayName = "Novo Usuario Deve Ser Adicionado Com Sucesso")]
         [Trait("Categoria", "Command Handler")]
         public async Task NovoUsuarioCommand_NovoUsuario_DeveAdicionarComSucesso()
         {
@@ -55,8 +55,45 @@ namespace Balta.Localizacao.ApplicationLayer.Testes
             _userManager.Verify(_userManager => _userManager.GetClaimsAsync(It.IsAny<IdentityUser>()), Times.Once);
             _userManager.Verify(_userManager => _userManager.GetRolesAsync(It.IsAny<IdentityUser>()), Times.Once);
         }
-        
-        [Fact(DisplayName = "Novo Usuario Deve Adicionar Com Falha")]
+
+        [Fact(DisplayName = "Novo Usuario Com Roles Deve Ser Adicionado Com Sucesso")]
+        [Trait("Categoria", "Command Handler")]
+        public async Task NovoUsuarioCommand_NovoUsuarioComRoles_DeveAdicionarComSucesso()
+        {
+            // Arrange
+            var appSetings = Options.Create(_usuarioBogusFixture.GerarAppSettings());
+
+            var _userManager = _usuarioBogusFixture.AutoMocker.GetMock<UserManager<IdentityUser>>();
+            var identityresult = IdentityResult.Success;
+
+            _userManager.Setup(u => u.CreateAsync(It.IsAny<IdentityUser>(), It.IsAny<string>()))
+                .ReturnsAsync(identityresult);
+
+            _userManager.Setup(u => u.FindByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync(_usuarioBogusFixture.GerarUsuariosValidos(10).FirstOrDefault());
+
+            _userManager.Setup(u => u.GetClaimsAsync(It.IsAny<IdentityUser>()))
+                .ReturnsAsync(_usuarioBogusFixture.GerarListaClaimVazia());
+
+            _userManager.Setup(u => u.GetRolesAsync(It.IsAny<IdentityUser>()))
+                .ReturnsAsync(_usuarioBogusFixture.GerarListaRolePopulada());
+
+
+            var command = _commandBogusFixture.GerarNovoUsuarioCommand();
+            var commandHandler = new AutenticacaoCommandHandler(It.IsAny<SignInManager<IdentityUser>>(), _userManager.Object, appSetings);
+
+            // Act
+            var result = await commandHandler.Handle(command, CancellationToken.None);
+
+            // Assert
+            Assert.True(result.IsValid);
+            _userManager.Verify(_userManager => _userManager.CreateAsync(It.IsAny<IdentityUser>(), It.IsAny<string>()), Times.Once);
+            _userManager.Verify(_userManager => _userManager.FindByEmailAsync(command.Email), Times.Once);
+            _userManager.Verify(_userManager => _userManager.GetClaimsAsync(It.IsAny<IdentityUser>()), Times.Once);
+            _userManager.Verify(_userManager => _userManager.GetRolesAsync(It.IsAny<IdentityUser>()), Times.Once);
+        }
+
+        [Fact(DisplayName = "Novo Usuario Deve Ser Adicionado Com Falha")]
         [Trait("Categoria", "Command Handler")]
         public async Task NovoUsuarioCommand_NovoUsuario_DeveAdicionarComFalha()
         {
@@ -91,7 +128,7 @@ namespace Balta.Localizacao.ApplicationLayer.Testes
             _userManager.Verify(_userManager => _userManager.CreateAsync(It.IsAny<IdentityUser>(), It.IsAny<string>()), Times.Once);
         }
         
-        [Fact(DisplayName = "Novo Usuario Deve Adicionar Com Falha Por Erros de Command")]
+        [Fact(DisplayName = "Novo Usuario Deve Ser Adicionado Com Falha Por Erros de Command")]
         [Trait("Categoria", "Command Handler")]
         public async Task NovoUsuarioCommand_NovoUsuario_DeveAdicionarComFalhaPorErrosDeCommand()
         {
@@ -121,7 +158,7 @@ namespace Balta.Localizacao.ApplicationLayer.Testes
             Assert.Contains(NovoUsuarioCommandValidation.ConfirmPasswordErrorMessage, erros);
         }
 
-        [Fact(DisplayName = "Login Deve Autenticar Com Sucesso")]
+        [Fact(DisplayName = "Login Deve Ser Autenticado Com Sucesso")]
         [Trait("Categoria", "Command Handler")]
         public async Task LoginCommand_AutenticarUsuario_DeveAutenticarComSucesso()
         {
@@ -160,7 +197,7 @@ namespace Balta.Localizacao.ApplicationLayer.Testes
             _userManager.Verify(_userManager => _userManager.GetRolesAsync(It.IsAny<IdentityUser>()), Times.Once);
         }
 
-        [Fact(DisplayName = "Login Deve Autenticar Com Falha Por Travamento")]
+        [Fact(DisplayName = "Login Deve Ser Autenticado Com Falha Por Travamento")]
         [Trait("Categoria", "Command Handler")]
         public async Task LoginCommand_AutenticarUsuario_DeveAutenticarComFalhaPorTravamento()
         {
@@ -198,7 +235,7 @@ namespace Balta.Localizacao.ApplicationLayer.Testes
             _signInManager.Verify(_signInManager => _signInManager.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()), Times.Once);
         }
 
-        [Fact(DisplayName = "Login Deve Autenticar Com Falha Por Erro De Credenciais")]
+        [Fact(DisplayName = "Login Deve Ser Autenticado Com Falha Por Erro De Credenciais")]
         [Trait("Categoria", "Command Handler")]
         public async Task LoginCommand_AutenticarUsuario_DeveAutenticarComFalhaPorErroDeCredenciais()
         {
@@ -236,7 +273,7 @@ namespace Balta.Localizacao.ApplicationLayer.Testes
             _signInManager.Verify(_signInManager => _signInManager.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()), Times.Once);
         }
 
-        [Fact(DisplayName = "Login Deve Autenticar Com Falha Por Erros Do Command")]
+        [Fact(DisplayName = "Login Deve Ser Autenticado Com Falha Por Erros Do Command")]
         [Trait("Categoria", "Command Handler")]
         public async Task LoginCommand_AutenticarUsuario_DeveRetornarErrosDoCommand()
         {

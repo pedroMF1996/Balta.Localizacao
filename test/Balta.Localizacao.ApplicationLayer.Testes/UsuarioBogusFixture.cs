@@ -53,6 +53,14 @@ namespace Balta.Localizacao.ApplicationLayer.Testes
         {
             return new List<string>();
         }
+        
+        public IList<string> GerarListaRolePopulada()
+        {
+            return new List<string>()
+            {
+                "Role Teste"
+            };
+        }
 
         public List<Claim> GerarListaClaimValidas(IdentityUser user)
         {
