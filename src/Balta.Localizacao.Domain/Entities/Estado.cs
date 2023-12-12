@@ -1,18 +1,14 @@
 ﻿using Balta.Localizacao.Core.DomainObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Balta.Localizacao.Domain.Entities.Validations;
 
 namespace Balta.Localizacao.Domain.Entities
 {
-    internal class Estado : Entity, IAggregateRoot
+    public class Estado : Entity, IAggregateRoot
     {
         public string CodigoUf { get; private set; }
         public string SiglaUf { get; private set; }
         public string NomeUf { get; private set; }
-        public List<Municipio> Municipios { get; private set; } = new();
+        public List<Municipio>? Municipios { get; private set; } = new();
 
         protected Estado()
         {
@@ -28,11 +24,13 @@ namespace Balta.Localizacao.Domain.Entities
 
         public void AdicionarMunicipio(Municipio municipio)
         {
-
+            municipio.AssociarEstado(this);
+            Municipios.Add(municipio);
         }
 
         public override bool EhValido()
         {
+            ValidationResult = new EstadoValidation().Validate(this);
             return base.EhValido();
         }
     }

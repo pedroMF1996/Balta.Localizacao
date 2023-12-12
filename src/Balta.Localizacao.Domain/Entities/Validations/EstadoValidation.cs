@@ -2,24 +2,23 @@
 
 namespace Balta.Localizacao.Domain.Entities.Validations
 {
-    internal class MunicipioValidation : AbstractValidator<Municipio>
+    public class EstadoValidation : AbstractValidator<Estado>
     {
-        public static string CodigoLengthErrorMessage = "O código do município deve conter 7 caracteres.";
-        public static string CodigoRequiredErrorMessage = "O campo código do município é obrigatorio.";
-        public static string NomeRequiredErrorMessage = "O campo nome é obrigatorio.";
-        public static string NomeMaxLengthErrorMessage = "O campo nome deve conter até 150 caracteres.";
+        public static string SiglaUfLengthErrorMessage = "O código do município deve conter 2 caracteres.";
+        public static string SiglaUfRequiredErrorMessage = "O campo código do município é obrigatorio.";
+        public static string NomeRequiredErrorMessage = "O campo nome UF é obrigatorio.";
+        public static string NomeMaxLengthErrorMessage = "O campo nome UF deve conter até 150 caracteres.";
         public static string CodigoUfLengthErrorMessage = "O código UF deve conter 2 caracteres.";
         public static string CodigoUfRequiredErrorMessage = "O campo código UF é obrigatorio.";
 
-
-        public MunicipioValidation()
+        public EstadoValidation()
         {
-            RuleFor(x => x.Codigo)
+            RuleFor(x => x.SiglaUf)
                 .NotEmpty()
-                .WithMessage(CodigoRequiredErrorMessage)
-                .Length(7)
-                .WithMessage(CodigoLengthErrorMessage);
-            RuleFor(x => x.Nome)
+                .WithMessage(SiglaUfRequiredErrorMessage)
+                .Length(2)
+                .WithMessage(SiglaUfLengthErrorMessage);
+            RuleFor(x => x.NomeUf)
                 .NotEmpty()
                 .WithMessage(NomeRequiredErrorMessage)
                 .MaximumLength(150)
