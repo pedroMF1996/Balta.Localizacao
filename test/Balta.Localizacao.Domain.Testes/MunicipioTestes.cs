@@ -1,6 +1,5 @@
 using Balta.Localizacao.Domain.Entities;
 using Balta.Localizacao.Domain.Entities.Validations;
-using Xunit;
 
 namespace Balta.Localizacao.Domain.Testes
 {
