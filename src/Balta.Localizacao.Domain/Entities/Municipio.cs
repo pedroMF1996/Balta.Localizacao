@@ -14,11 +14,11 @@ namespace Balta.Localizacao.Domain.Entities
         {
         }
 
-        public Municipio(string codigo, string nome, string codigoUf)
+        public Municipio(string codigo, string nome)
         {
             Codigo = codigo;
             Nome = nome;
-            CodigoUf = codigoUf;
+            CodigoUf = string.Empty;
         }
 
         public void AssociarEstado(Estado estado)

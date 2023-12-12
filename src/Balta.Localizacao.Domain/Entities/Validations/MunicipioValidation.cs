@@ -2,7 +2,7 @@
 
 namespace Balta.Localizacao.Domain.Entities.Validations
 {
-    internal class MunicipioValidation : AbstractValidator<Municipio>
+    public class MunicipioValidation : AbstractValidator<Municipio>
     {
         public static string CodigoLengthErrorMessage = "O código do município deve conter 7 caracteres.";
         public static string CodigoRequiredErrorMessage = "O campo código do município é obrigatorio.";
