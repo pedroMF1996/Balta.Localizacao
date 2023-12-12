@@ -8,6 +8,8 @@ namespace Balta.Localizacao.DAL.Mappings
     {
         public void Configure(EntityTypeBuilder<Municipio> builder)
         {
+            builder.HasKey(e => e.Id);
+
             builder.Property(e => e.CodigoUf)
                 .IsRequired()
                 .HasMaxLength(2);
