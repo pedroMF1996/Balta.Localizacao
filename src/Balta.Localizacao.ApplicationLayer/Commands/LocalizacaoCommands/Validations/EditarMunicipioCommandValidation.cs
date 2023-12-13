@@ -7,6 +7,7 @@ namespace Balta.Localizacao.ApplicationLayer.Commands.LocalizacaoCommands.Valida
         public static string IdRequiredErrorMessage = "O campo Id é obrigatorio.";
         public static string CodigoLengthErrorMessage = "O código do município deve conter 7 caracteres.";
         public static string CodigoRequiredErrorMessage = "O campo código do município é obrigatorio.";
+        public static string CodigoCompatibleCodigoUfErrorMessage = "O codigo do municipio deve ser compativel com o codigo do estado associado";
         public static string NomeRequiredErrorMessage = "O campo nome é obrigatorio.";
         public static string NomeMaxLengthErrorMessage = "O campo nome deve conter até 150 caracteres.";
         public static string CodigoUfLengthErrorMessage = "O código UF deve conter 2 caracteres.";
@@ -16,6 +17,9 @@ namespace Balta.Localizacao.ApplicationLayer.Commands.LocalizacaoCommands.Valida
             RuleFor(x => x.Id)
                 .NotEqual(Guid.Empty)
                 .WithMessage(IdRequiredErrorMessage);
+            RuleFor(X => X.Codigo.Substring(0, 2))
+                .Equal(x => x.CodigoUf)
+                .WithMessage(CodigoCompatibleCodigoUfErrorMessage);
             RuleFor(x => x.Codigo)
                .NotEmpty()
                .WithMessage(CodigoRequiredErrorMessage)

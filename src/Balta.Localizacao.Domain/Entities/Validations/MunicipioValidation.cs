@@ -18,12 +18,12 @@ namespace Balta.Localizacao.Domain.Entities.Validations
                 .NotEmpty()
                 .WithMessage(CodigoRequiredErrorMessage)
                 .Length(7)
-                .WithMessage(CodigoLengthErrorMessage);
+                .WithMessage(CodigoLengthErrorMessage);            
             RuleFor(x => x.Nome)
                 .NotEmpty()
                 .WithMessage(NomeRequiredErrorMessage)
                 .MaximumLength(150)
-                .WithMessage(NomeMaxLengthErrorMessage);
+                .WithMessage(NomeMaxLengthErrorMessage);            
             RuleFor(x => x.CodigoUf)
                 .NotEmpty()
                 .WithMessage(CodigoUfRequiredErrorMessage)

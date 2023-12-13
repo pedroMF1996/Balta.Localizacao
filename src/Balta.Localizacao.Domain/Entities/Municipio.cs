@@ -1,4 +1,5 @@
 ﻿using Balta.Localizacao.Core.DomainObjects;
+using Balta.Localizacao.Core.Spacification;
 using Balta.Localizacao.Domain.Entities.Spacifications;
 using Balta.Localizacao.Domain.Entities.Validations;
 
@@ -22,43 +23,19 @@ namespace Balta.Localizacao.Domain.Entities
             CodigoUf = string.Empty;
         }
 
-        public void AlterarMunicipio(Municipio municipio)
+        public void AlterarMunicipio(Municipio novoMunicipio)
         {
-            if(VerificarAlterarCodigo(municipio)) 
-                AlterarCodigo(municipio.Codigo);
+            if(VerificarAlterarCodigoUf(novoMunicipio)) 
+                AlterarCodigoUf(novoMunicipio.CodigoUf);
 
-            if(VerificarAlterarCodigoUf(municipio)) 
-                AlterarCodigoUf(municipio.CodigoUf);
+            if(VerificarAlterarCodigo(novoMunicipio)) 
+                AlterarCodigo(novoMunicipio.Codigo);
 
-            if(VerificarAlterarNome(municipio)) 
-                AlterarNome(municipio.Nome);
+            if(VerificarAlterarNome(novoMunicipio)) 
+                AlterarNome(novoMunicipio.Nome);
         }
 
-        private bool VerificarAlterarCodigoUf(Municipio municipio)
-            => new MunicipioEditarCodigoUfSpacification(this).IsSatisfiedBy(municipio);
-
-        private bool VerificarAlterarCodigo(Municipio municipio)
-            => new MunicipioEditarCodigoSpacification(this).IsSatisfiedBy(municipio);
-
-        private bool VerificarAlterarNome(Municipio municipio)
-            => new MunicipioEditarNomeSpacification(this).IsSatisfiedBy(municipio);
-
-        private void AlterarCodigo(string codigo)
-        {
-            Codigo = codigo;
-        }
-        
-        private void AlterarCodigoUf(string codigoUf)
-        {
-            Codigo = codigoUf;
-        }
-
-        private void AlterarNome(string nome)
-        {
-            Nome = nome;
-        }
-
-        private void AssociarEstado(Estado estado)
+        public void AssociarEstado(Estado estado)
         {
             CodigoUf = estado.CodigoUf;
             Estado = estado;
@@ -69,5 +46,40 @@ namespace Balta.Localizacao.Domain.Entities
             ValidationResult = new MunicipioValidation().Validate(this);
             return base.EhValido();
         }
+
+        #region Metodos_Privados
+
+        private bool VerificarAlterarCodigoUf(Municipio novoMunicipio)
+            => new NovoMunicipioCodigoUfNuloOuVazioSpacification().Not()
+                    .And(new NovoMunicipioCodigoUfDiferenteDoAtualSpacification(this))
+                    .IsSatisfiedBy(novoMunicipio);
+
+        private bool VerificarAlterarCodigo(Municipio novoMunicipio)
+            => new NovoMunicipioCodigoNuloOuVazioSpacification().Not()
+                .And(new NovoMunicipioCodigoUfDiferenteDoAtualSpacification(this))
+                .And(new MunicipioCodigoCompativelComCodigoUfSpacification(CodigoUf))
+                    .IsSatisfiedBy(novoMunicipio);
+
+        private bool VerificarAlterarNome(Municipio novoMunicipio)
+            => new NovoMunicipioNomeNuloOuVazioSpacification().Not()
+                .And(new NovoMunicipioNomeDiferenteDoAtualSpacification(this))
+                    .IsSatisfiedBy(novoMunicipio);
+
+        private void AlterarCodigo(string codigo)
+        {
+            Codigo = codigo;
+        }
+
+        private void AlterarCodigoUf(string codigoUf)
+        {
+            CodigoUf = codigoUf;
+        }
+
+        private void AlterarNome(string nome)
+        {
+            Nome = nome;
+        } 
+
+        #endregion
     }
 }
