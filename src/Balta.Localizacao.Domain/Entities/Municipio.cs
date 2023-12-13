@@ -56,7 +56,7 @@ namespace Balta.Localizacao.Domain.Entities
 
         private bool VerificarAlterarCodigo(Municipio novoMunicipio)
             => new NovoMunicipioCodigoNuloOuVazioSpacification().Not()
-                .And(new NovoMunicipioCodigoUfDiferenteDoAtualSpacification(this))
+                .And(new NovoMunicipioCodigoDiferenteDoAtualSpacification(this))
                 .And(new MunicipioCodigoCompativelComCodigoUfSpacification(CodigoUf))
                     .IsSatisfiedBy(novoMunicipio);
 

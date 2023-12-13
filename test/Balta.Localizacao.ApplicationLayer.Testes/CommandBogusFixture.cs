@@ -1,5 +1,6 @@
 ﻿using Balta.Localizacao.ApplicationLayer.Commands.AutenticacaoCommands;
 using Balta.Localizacao.ApplicationLayer.Commands.LocalizacaoCommands;
+using Balta.Localizacao.Domain.Entities;
 using Bogus;
 using Bogus.DataSets;
 
@@ -7,9 +8,8 @@ namespace Balta.Localizacao.ApplicationLayer.Testes
 {
     [CollectionDefinition(nameof(CommandBogusFixtureCollection))]
     public class CommandBogusFixtureCollection : ICollectionFixture<CommandBogusFixture>
-    {
-
-    }
+    { }
+    
     public class CommandBogusFixture
     {
         public NovoUsuarioCommand GerarNovoUsuarioCommand()
@@ -151,6 +151,11 @@ namespace Balta.Localizacao.ApplicationLayer.Testes
         public RemoverMunicipioCommand GerarRemoverMunicipioCommandInvalido()
         {
             return new RemoverMunicipioCommand();
+        }
+
+        public Estado RetornarEstado()
+        {
+            return new Estado("11", "RO", "Rondônia");
         }
     }
 }

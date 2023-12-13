@@ -72,20 +72,6 @@ namespace Balta.Localizacao.Domain.Testes
             Assert.True(municipio.EhValido());
         }
 
-        [Fact(DisplayName = "Associar Estado A Municipio Com Falha", 
-            Skip = "O metodo AssociarEstado deve ser livre de validacao \n pois devemos atribuir o CodigoUf para posteriormente Alterar o Codigo do municipio")]
-        [Trait("Categoria", "Entity")]
-        public void AssociarEstadoAMunicipio_AssociarEstado_DeveRetornarException()
-        {
-            // Arrange
-            var estado = new Estado("35", "SP", "Sao Paulo");
-            var municipio = new Municipio("1100015", "Alta Floresta D'Oeste");
-
-            // Act & Assert
-            var exception = Assert.Throws<DomainException>(() => municipio.AssociarEstado(estado));            
-            Assert.Equal("Codigo municipio e codigo estado nao sao compativeis.", exception.Message);
-        }
-
         [Fact(DisplayName = "Editar Municipio Editar Codigo Com Sucesso")]
         [Trait("Categoria", "Entity")]
         public void EditarMunicipio_EditarCodigo_DeveEditarCodigoComSucesso()

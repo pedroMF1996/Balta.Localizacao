@@ -86,12 +86,9 @@ namespace Balta.Localizacao.ApplicationLayer.Commands.LocalizacaoCommands
         public async Task<ValidationResult> Handle(AdicionarEstadoCommand message, CancellationToken cancellationToken)
         {
             if (!message.EhValido())
-                return ValidationResult;
+                return message.ValidationResult;
 
             var estado = CriarNovoEstado(message.CodigoUf, message.SiglaUf, message.NomeUf);
-
-            if (PossuiErros())
-                return ValidationResult;
 
             await _estadoRepository.AdicionarEstado(estado);
 
