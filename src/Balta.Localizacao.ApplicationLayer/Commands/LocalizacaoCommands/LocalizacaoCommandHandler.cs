@@ -147,6 +147,8 @@ namespace Balta.Localizacao.ApplicationLayer.Commands.LocalizacaoCommands
             return PersistirDados(_estadoRepository);
         }
 
+        #region Metodos_Privados
+
         private Estado ObterEstadoPorCodigoUf(string codigoUf)
         {
             var estado = _estadoRepository.ObterEstadoPorCodigoUf(codigoUf);
@@ -190,7 +192,7 @@ namespace Balta.Localizacao.ApplicationLayer.Commands.LocalizacaoCommands
 
             return municipio;
         }
-        
-        
+
+        #endregion
     }
 }

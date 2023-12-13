@@ -25,10 +25,7 @@ namespace Balta.Localizacao.Domain.Entities
         public void AlterarCodigoUf(string codigoUf)
         {
             CodigoUf = codigoUf;
-            Municipios.ForEach(municipio =>
-            {
-                municipio.AssociarEstado(this);
-            });
+            Municipios.ForEach(municipio => municipio.AssociarEstado(this));
         }
 
         public void AlterarSiglaUf(string siglaUf)
