@@ -75,7 +75,7 @@ namespace Balta.Localizacao.Domain.Testes
         [Fact(DisplayName = "Associar Estado A Municipio Com Falha", 
             Skip = "O metodo AssociarEstado deve ser livre de validacao \n pois devemos atribuir o CodigoUf para posteriormente Alterar o Codigo do municipio")]
         [Trait("Categoria", "Entity")]
-        public void AssociarEstadoAMunicipio_AssociarEstado_DeveAssociarEstadoComFalha()
+        public void AssociarEstadoAMunicipio_AssociarEstado_DeveRetornarException()
         {
             // Arrange
             var estado = new Estado("35", "SP", "Sao Paulo");
@@ -106,7 +106,7 @@ namespace Balta.Localizacao.Domain.Testes
         
         [Fact(DisplayName = "Editar Municipio Editar Codigo Com Falha")]
         [Trait("Categoria", "Entity")]
-        public void EditarMunicipio_EditarCodigo_DeveEditarCodigoComFalha()
+        public void EditarMunicipio_EditarCodigo_DeveRetornarException()
         {
             // Arrange
             var estado = new Estado("11", "RO", "Rondônia");
@@ -140,7 +140,7 @@ namespace Balta.Localizacao.Domain.Testes
 
         [Fact(DisplayName = "Editar Municipio Editar Nome Com Falha")]
         [Trait("Categoria", "Entity")]
-        public void EditarMunicipio_EditarNome_DeveEditarNomeComFalha()
+        public void EditarMunicipio_EditarNome_NaoDeveEditarNome()
         {
             // Arrange
             var estado = new Estado("11", "RO", "Rondônia");

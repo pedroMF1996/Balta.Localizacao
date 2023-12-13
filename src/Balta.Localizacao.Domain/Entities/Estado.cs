@@ -13,9 +13,7 @@ namespace Balta.Localizacao.Domain.Entities
         public List<Municipio>? Municipios { get; private set; } = new();
 
         protected Estado()
-        {
-
-        }
+        { }
         
         public Estado(string codigoUf, string siglaUf, string nomeUf)
         {
@@ -34,6 +32,15 @@ namespace Balta.Localizacao.Domain.Entities
 
             if (VerificarAlterarNomeUf(novoEstado))
                 AlterarNomeUf(novoEstado.NomeUf);
+        }
+
+        public void AdicionarMunicipio(Municipio municipio)
+        {
+            if (VerificarMunicipiosRepetidos(municipio))
+            {
+                municipio.AssociarEstado(this);
+                Municipios.Add(municipio);
+            }
         }
 
         public override bool EhValido()
@@ -79,11 +86,15 @@ namespace Balta.Localizacao.Domain.Entities
             NomeUf = nomeUf;
         }
 
-        public void AdicionarMunicipio(Municipio municipio)
-        {
-            municipio.AssociarEstado(this);
-            Municipios.Add(municipio);
-        } 
+        private bool VerificarMunicipiosRepetidos(Municipio municipio)
+            => new ExisteMunipiosRepetidosSpacification(Municipios, CodigoUf)
+                .IsSatisfiedBy(municipio);
+        
         #endregion
+
+        public static class EstadoFactory
+        {
+            public static Estado CriarEstadoVazio() => new Estado();
+        }
     }
 }

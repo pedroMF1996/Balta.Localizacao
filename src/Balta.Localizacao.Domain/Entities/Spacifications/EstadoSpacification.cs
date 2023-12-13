@@ -1,4 +1,5 @@
-﻿using Balta.Localizacao.Core.Spacification;
+﻿using Balta.Localizacao.Core.DomainObjects;
+using Balta.Localizacao.Core.Spacification;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Balta.Localizacao.Domain.Entities.Spacifications
@@ -69,6 +70,27 @@ namespace Balta.Localizacao.Domain.Entities.Spacifications
         public bool IsSatisfiedBy(Estado novoEstado)
         {
             return novoEstado.NomeUf.IsNullOrEmpty();
+        }
+    }
+
+    public class ExisteMunipiosRepetidosSpacification : ISpacification<Municipio>
+    {
+        private readonly IReadOnlyCollection<Municipio> _municipios;
+        private readonly string _codigoUf;
+
+        public ExisteMunipiosRepetidosSpacification(IReadOnlyCollection<Municipio> municipios, string codigoUf)
+        {
+            _municipios = municipios;
+            _codigoUf = codigoUf;
+        }
+
+        public bool IsSatisfiedBy(Municipio novoMunicipio)
+        {
+            var spacificationResult = !_municipios.Where(m => m.CodigoUf == _codigoUf 
+                                            && m.Codigo == novoMunicipio.Codigo
+                                            && m.Nome == novoMunicipio.Nome).Any();
+
+            return spacificationResult ? spacificationResult : throw new DomainException("Impossivel aderir novo municipio, registro ja existente");
         }
     }
 }

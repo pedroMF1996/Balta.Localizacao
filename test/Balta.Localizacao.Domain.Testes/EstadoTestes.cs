@@ -1,4 +1,5 @@
-﻿using Balta.Localizacao.Domain.Entities;
+﻿using Balta.Localizacao.Core.DomainObjects;
+using Balta.Localizacao.Domain.Entities;
 using Balta.Localizacao.Domain.Entities.Validations;
 
 namespace Balta.Localizacao.Domain.Testes
@@ -17,6 +18,20 @@ namespace Balta.Localizacao.Domain.Testes
 
             // Assert
             Assert.True(result);
+        }
+        
+        [Fact(DisplayName = "Instanciar Estado Com Sucesso")]
+        [Trait("Categoria", "Entity")]
+        public void InstanciarEstado_NovoEstado_DeveInstanciarEstadoVazioComSucesso()
+        {
+            // Arrange
+            var estado = Estado.EstadoFactory.CriarEstadoVazio();
+
+            // Act
+            var result = estado.EhValido();
+
+            // Assert
+            Assert.False(result);
         }
         
         [Fact(DisplayName = "Instanciar Estado Com Erros De Validacao")]
@@ -53,5 +68,95 @@ namespace Balta.Localizacao.Domain.Testes
             // Assert
             Assert.True(estado.EhValido());
         }
+        
+        
+        [Fact(DisplayName = "Nao Deve Adicionar Municipio Repetido")]
+        [Trait("Categoria", "Entity")]
+        public void AdicionarMunicipioAEstado_MunicipioRepetido_DeveRetornarException()
+        {
+            // Arrange
+            var municipio = new Municipio("1100015", "Alta Floresta D'Oeste");
+            var estado = new Estado("11", "RO", "Rondônia");
+            estado.AdicionarMunicipio(municipio);
+
+            // Act, Assert
+            var exception = Assert.Throws<DomainException>(()=>estado.AdicionarMunicipio(municipio));
+            Assert.Equal("Impossivel aderir novo municipio, registro ja existente", exception.Message);
+        }
+
+        [Fact(DisplayName = "Editar Estado SiglaUf Com Sucesso")]
+        [Trait("Categoria", "Entity")]
+        public void EditarEstadoSiglaUf_EditarEstado_DeveEditarEstadoComSucesso()
+        {
+            // Arrange
+            var estado = new Estado("11", "RO", "Rondônia");
+            var novoEstado = new Estado("11", "SP", "Rondônia");
+
+            // Act
+            estado.AlterarEstado(novoEstado);
+
+            // Assert
+            Assert.Equal(estado.SiglaUf, novoEstado.SiglaUf);
+        }
+        
+        [Fact(DisplayName = "Nao Deve Editar Estado SiglaUf")]
+        [Trait("Categoria", "Entity")]
+        public void EditarEstadoSiglaUf_EditarEstado_NaoDeveEditarEstado()
+        {
+            // Arrange
+            var estado = new Estado("11", "RO", "Rondônia");
+            var novoEstado = new Estado("11", "", "Rondônia");
+
+            // Act
+            estado.AlterarEstado(novoEstado);
+
+            // Assert
+            Assert.NotEqual(estado.SiglaUf, novoEstado.SiglaUf);
+        }
+
+        [Fact(DisplayName = "Editar Estado CodigoUf Com Sucesso")]
+        [Trait("Categoria", "Entity")]
+        public void EditarEstadoCodigoUf_EditarEstado_DeveEditarEstadoComSucesso()
+        {
+            // Arrange
+            var estado = new Estado("13", "RO", "Rondônia");
+            var novoEstado = new Estado("11", "RO", "Rondônia");
+
+            // Act
+            estado.AlterarEstado(novoEstado);
+
+            // Assert
+            Assert.Equal(estado.CodigoUf, novoEstado.CodigoUf);
+        }
+        [Fact(DisplayName = "Nao Deve Editar Estado CodigoUf")]
+        [Trait("Categoria", "Entity")]
+        public void EditarEstadoCodigoUf_EditarEstado_NaoDeveEditarEstado()
+        {
+            // Arrange
+            var estado = new Estado("11", "RO", "Rondônia");
+            var novoEstado = new Estado("", "RO", "Rondônia");
+
+            // Act
+            estado.AlterarEstado(novoEstado);
+
+            // Assert
+            Assert.NotEqual(estado.CodigoUf, novoEstado.CodigoUf);
+        }
+        
+        [Fact(DisplayName = "Editar Estado NomeUf Com Sucesso")]
+        [Trait("Categoria", "Entity")]
+        public void EditarEstadoNomeUf_EditarEstado_DeveEditarEstadoComSucesso()
+        {
+            // Arrange
+            var estado = new Estado("11", "RO", "Rndônia");
+            var novoEstado = new Estado("11", "RO", "Rondônia");
+
+            // Act
+            estado.AlterarEstado(novoEstado);
+
+            // Assert
+            Assert.Equal(estado.NomeUf, novoEstado.NomeUf);
+        }
+        
     }
 }
