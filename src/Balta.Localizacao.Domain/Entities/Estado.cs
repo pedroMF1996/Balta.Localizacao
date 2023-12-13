@@ -1,4 +1,5 @@
 ﻿using Balta.Localizacao.Core.DomainObjects;
+using Balta.Localizacao.Domain.Entities.Spacifications;
 using Balta.Localizacao.Domain.Entities.Validations;
 
 namespace Balta.Localizacao.Domain.Entities
@@ -22,18 +23,39 @@ namespace Balta.Localizacao.Domain.Entities
             NomeUf = nomeUf;
         }
 
-        public void AlterarCodigoUf(string codigoUf)
+        public void AlterarEstado(Estado estado)
+        {
+            if (VerificarAlterarCodigoUf(estado))
+                AlterarCodigoUf(estado.CodigoUf);
+
+            if (VerificarAlterarSiglaUf(estado))
+                AlterarSiglaUf(estado.SiglaUf);
+
+            if (VerificarAlterarNomeUf(estado))
+                AlterarNomeUf(estado.NomeUf);
+        }
+
+        private bool VerificarAlterarCodigoUf(Estado estado)
+            => new EstadoEditarCodigoUfSpacification(this).IsSatisfiedBy(estado);
+
+        private bool VerificarAlterarSiglaUf(Estado estado)
+            => new EstadoEditarSiglaUfSpacification(this).IsSatisfiedBy(estado);
+
+        private bool VerificarAlterarNomeUf(Estado estado)
+            => new EstadoEditarNomeUfSpacification(this).IsSatisfiedBy(estado);
+
+        private void AlterarCodigoUf(string codigoUf)
         {
             CodigoUf = codigoUf;
             Municipios.ForEach(municipio => municipio.AssociarEstado(this));
         }
 
-        public void AlterarSiglaUf(string siglaUf)
+        private void AlterarSiglaUf(string siglaUf)
         {
             SiglaUf = siglaUf;
         }
 
-        public void AlterarNomeUf(string nomeUf)
+        private void AlterarNomeUf(string nomeUf)
         {
             NomeUf = nomeUf;
         }

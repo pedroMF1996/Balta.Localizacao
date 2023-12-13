@@ -10,8 +10,4 @@
     <ProjectReference Include="..\Balta.Localizacao.Core\Balta.Localizacao.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Entities\Spacifications\" />
-  </ItemGroup>
-
 </Project>

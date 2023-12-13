@@ -23,7 +23,12 @@ namespace Balta.Localizacao.Core.Messages
             return !ValidationResult.IsValid;
         }
 
-        public virtual ValidationResult PersistirDados<T>(IRepository<T> repository) where T : IAggregateRoot
+        protected void ObterErrosValidacao<T>(T entidade) where T : Entity
+        {
+            entidade.ValidationResult.Errors.Select(e => e.ErrorMessage).ToList().ForEach(e => AdicionarErro(e));
+        }
+
+        protected virtual ValidationResult PersistirDados<T>(IRepository<T> repository) where T : IAggregateRoot
         {
             if (!repository.unitOfWork.Commit())
                 AdicionarErro("Erro ao persistir dados");

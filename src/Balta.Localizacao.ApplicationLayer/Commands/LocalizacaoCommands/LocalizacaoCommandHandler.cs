@@ -1,5 +1,4 @@
-﻿using Balta.Localizacao.Core.DomainObjects;
-using Balta.Localizacao.Core.Messages;
+﻿using Balta.Localizacao.Core.Messages;
 using Balta.Localizacao.Domain.Entities;
 using Balta.Localizacao.Domain.Interfaces;
 using FluentValidation.Results;
@@ -32,12 +31,10 @@ namespace Balta.Localizacao.ApplicationLayer.Commands.LocalizacaoCommands
             if (PossuiErros())
                 return ValidationResult;
 
-            var municipio = new Municipio(message.Codigo, message.Nome);
+            var municipio = CriarMunicipio(message.Codigo, message.Nome, estado);
 
-            estado.AdicionarMunicipio(municipio);
-
-            if (!municipio.EhValido())
-                ObterErrosValidacao(municipio);
+            if (PossuiErros())
+                return ValidationResult;
 
             await _estadoRepository.AdicionarMunicipios(municipio);
 
@@ -59,22 +56,18 @@ namespace Balta.Localizacao.ApplicationLayer.Commands.LocalizacaoCommands
             if (PossuiErros())
                 return ValidationResult;
 
-            if(municipio.Codigo != message.Codigo)
-                municipio.AlterarCodigo(message.Codigo);
+            var novoMunicipio = CriarMunicipio(message.Codigo, message.Nome, estado);
 
+            if(PossuiErros())
+                return ValidationResult;
 
-            if (municipio.CodigoUf != message.CodigoUf)
-                estado.AdicionarMunicipio(municipio);
-            
-            
-            if(municipio.Nome != message.Nome)
-                municipio.AlterarNome(message.Nome);
+            municipio.AlterarMunicipio(novoMunicipio);
 
             _estadoRepository.EditarMunicipios(municipio);
 
             return PersistirDados(_estadoRepository);
         }
-
+        
         public async Task<ValidationResult> Handle(RemoverMunicipioCommand message, CancellationToken cancellationToken)
         {
             if (!message.EhValido())
@@ -114,15 +107,13 @@ namespace Balta.Localizacao.ApplicationLayer.Commands.LocalizacaoCommands
 
             if (PossuiErros())
                 return ValidationResult;
-
-            if (estado.CodigoUf != message.CodigoUf)
-                estado.AlterarCodigoUf(message.CodigoUf);
-
-            if(estado.SiglaUf != message.SiglaUf)
-                estado.AlterarSiglaUf(message.SiglaUf);
             
-            if(estado.NomeUf != message.NomeUf)
-                estado.AlterarNomeUf(message.NomeUf);
+            var novoEstado = CriarNovoEstado(message.CodigoUf, message.SiglaUf, message.NomeUf);
+
+            if(PossuiErros())
+                return ValidationResult;
+
+            estado.AlterarEstado(novoEstado);
 
             if (!estado.EhValido())
                 ObterErrosValidacao(estado);
@@ -175,9 +166,14 @@ namespace Balta.Localizacao.ApplicationLayer.Commands.LocalizacaoCommands
             return estado;
         }
 
-        private void ObterErrosValidacao<T>(T entidade) where T : Entity
+        private Estado CriarNovoEstado(string codigoUf, string siglaUf, string nomeUf)
         {
-            entidade.ValidationResult.Errors.Select(e => e.ErrorMessage).ToList().ForEach(e => AdicionarErro(e));
+            var novoEstado = new Estado(codigoUf, siglaUf, nomeUf);
+
+            if (!novoEstado.EhValido())
+                ObterErrosValidacao(novoEstado);
+
+            return novoEstado;
         }
 
         private Municipio ObterMunicipioPorId(Guid id)
@@ -191,6 +187,18 @@ namespace Balta.Localizacao.ApplicationLayer.Commands.LocalizacaoCommands
                 ObterErrosValidacao(municipio);
 
             return municipio;
+        }
+
+        private Municipio CriarMunicipio(string codigo, string nome, Estado estado)
+        {
+            var novoMunicipio = new Municipio(codigo, nome);
+
+            estado.AdicionarMunicipio(novoMunicipio);
+
+            if (!novoMunicipio.EhValido())
+                ObterErrosValidacao(novoMunicipio);
+
+            return novoMunicipio;
         }
 
         #endregion
