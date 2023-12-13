@@ -22,6 +22,25 @@ namespace Balta.Localizacao.Domain.Entities
             NomeUf = nomeUf;
         }
 
+        public void AlterarCodigoUf(string codigoUf)
+        {
+            CodigoUf = codigoUf;
+            Municipios.ForEach(municipio =>
+            {
+                municipio.AssociarEstado(this);
+            });
+        }
+
+        public void AlterarSiglaUf(string siglaUf)
+        {
+            SiglaUf = siglaUf;
+        }
+
+        public void AlterarNomeUf(string nomeUf)
+        {
+            NomeUf = nomeUf;
+        }
+
         public void AdicionarMunicipio(Municipio municipio)
         {
             municipio.AssociarEstado(this);
@@ -31,6 +50,11 @@ namespace Balta.Localizacao.Domain.Entities
         public override bool EhValido()
         {
             ValidationResult = new EstadoValidation().Validate(this);
+
+            if (Municipios.Count > 0)
+                ValidationResult.Errors.AddRange(Municipios
+                    .SelectMany(i => new MunicipioValidation().Validate(i).Errors).ToList());
+
             return base.EhValido();
         }
     }

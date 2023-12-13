@@ -21,6 +21,16 @@ namespace Balta.Localizacao.Domain.Entities
             CodigoUf = string.Empty;
         }
 
+        public void AlterarCodigo(string codigo)
+        {
+            Codigo = codigo;
+        }
+
+        public void AlterarNome(string nome)
+        {
+            Nome = nome;
+        }
+
         public void AssociarEstado(Estado estado)
         {
             CodigoUf = estado.CodigoUf;
@@ -30,7 +40,7 @@ namespace Balta.Localizacao.Domain.Entities
         public override bool EhValido()
         {
             ValidationResult = new MunicipioValidation().Validate(this);
-            return ValidationResult.IsValid;
+            return base.EhValido();
         }
     }
 }
