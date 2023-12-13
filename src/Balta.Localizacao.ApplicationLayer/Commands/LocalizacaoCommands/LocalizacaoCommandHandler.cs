@@ -88,10 +88,10 @@ namespace Balta.Localizacao.ApplicationLayer.Commands.LocalizacaoCommands
             if (!message.EhValido())
                 return ValidationResult;
 
-            var estado = new Estado(message.CodigoUf,message.SiglaUf,message.NomeUf);
+            var estado = CriarNovoEstado(message.CodigoUf, message.SiglaUf, message.NomeUf);
 
-            if (!estado.EhValido())
-                ObterErrosValidacao(estado);
+            if (PossuiErros())
+                return ValidationResult;
 
             await _estadoRepository.AdicionarEstado(estado);
 
@@ -139,6 +139,8 @@ namespace Balta.Localizacao.ApplicationLayer.Commands.LocalizacaoCommands
         }
 
         #region Metodos_Privados
+       
+        #region Estado
 
         private Estado ObterEstadoPorCodigoUf(string codigoUf)
         {
@@ -176,6 +178,9 @@ namespace Balta.Localizacao.ApplicationLayer.Commands.LocalizacaoCommands
             return novoEstado;
         }
 
+        #endregion
+        #region Municipio
+
         private Municipio ObterMunicipioPorId(Guid id)
         {
             var municipio = _estadoRepository.ObterMunicipioPorId(id);
@@ -200,6 +205,8 @@ namespace Balta.Localizacao.ApplicationLayer.Commands.LocalizacaoCommands
 
             return novoMunicipio;
         }
+
+        #endregion
 
         #endregion
     }
