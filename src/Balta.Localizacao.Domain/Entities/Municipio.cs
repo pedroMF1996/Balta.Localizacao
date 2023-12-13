@@ -80,6 +80,11 @@ namespace Balta.Localizacao.Domain.Entities
             Nome = nome;
         } 
 
+        public static class MunicipioFactory
+        {
+            public static Municipio CriarMunicipioVazio() => new Municipio();
+        }
+
         #endregion
     }
 }

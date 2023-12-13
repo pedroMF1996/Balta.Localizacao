@@ -23,6 +23,20 @@ namespace Balta.Localizacao.Domain.Testes
             Assert.Contains(MunicipioValidation.CodigoUfRequiredErrorMessage, erros);
         }
         
+        [Fact(DisplayName = "Instanciar Municipio Com Falha")]
+        [Trait("Categoria", "Entity")]
+        public void InstanciarMunicipio_NovoMunicipio_DeveInstanciarMunicipioComFalha()
+        {
+            // Arrange
+            var municipio = Municipio.MunicipioFactory.CriarMunicipioVazio();
+
+            // Act
+            var result = municipio.EhValido();
+
+            // Assert
+            Assert.False(result);
+        }
+        
         [Fact(DisplayName = "Instanciar Municipio Com Erros De Validacao")]
         [Trait("Categoria", "Entity")]
         public void InstanciarMunicipio_NovoMunicipio_DeveInstanciarMunicipioComErrosDeValidacao()
@@ -58,7 +72,8 @@ namespace Balta.Localizacao.Domain.Testes
             Assert.True(municipio.EhValido());
         }
 
-        [Fact(DisplayName = "Associar Estado A Municipio Com Falha")]
+        [Fact(DisplayName = "Associar Estado A Municipio Com Falha", 
+            Skip = "O metodo AssociarEstado deve ser livre de validacao \n pois devemos atribuir o CodigoUf para posteriormente Alterar o Codigo do municipio")]
         [Trait("Categoria", "Entity")]
         public void AssociarEstadoAMunicipio_AssociarEstado_DeveAssociarEstadoComFalha()
         {
