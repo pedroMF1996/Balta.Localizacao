@@ -6,9 +6,9 @@ namespace Balta.Localizacao.ApplicationLayer.Commands.LocalizacaoCommands
 {
     public class AdicionarMunicipioCommand : Command
     {
-        public string Codigo { get; private set; }
-        public string Nome { get; private set; }
-        public string CodigoUf { get; private set; }
+        public string Codigo { get;  set; }
+        public string Nome { get; set; }
+        public string CodigoUf { get; set; }
 
         public AdicionarMunicipioCommand()
         {
