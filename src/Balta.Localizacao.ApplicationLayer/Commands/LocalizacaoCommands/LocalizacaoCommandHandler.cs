@@ -30,11 +30,8 @@ namespace Balta.Localizacao.ApplicationLayer.Commands.LocalizacaoCommands
 
             if (PossuiErros())
                 return ValidationResult;
-
+            
             var municipio = CriarMunicipio(message.Codigo, message.Nome, estado);
-
-            if (PossuiErros())
-                return ValidationResult;
 
             await _estadoRepository.AdicionarMunicipios(municipio);
 
@@ -54,9 +51,6 @@ namespace Balta.Localizacao.ApplicationLayer.Commands.LocalizacaoCommands
             var municipio = ObterMunicipioPorId(message.Id);
 
             if (PossuiErros())
-                return ValidationResult;
-
-            if(PossuiErros())
                 return ValidationResult;
 
             municipio.AlterarMunicipio(message.Codigo, message.Nome, estado.CodigoUf);
@@ -169,7 +163,10 @@ namespace Balta.Localizacao.ApplicationLayer.Commands.LocalizacaoCommands
             var municipio = _estadoRepository.ObterMunicipioPorId(id);
 
             if (municipio == null)
+            {
                 AdicionarErro("Municipio nao encontrado");
+                return municipio;
+            }
 
             if (!municipio.EhValido())
                 ObterErrosValidacao(municipio);
@@ -182,9 +179,6 @@ namespace Balta.Localizacao.ApplicationLayer.Commands.LocalizacaoCommands
             var novoMunicipio = new Municipio(codigo, nome);
 
             estado.AdicionarMunicipio(novoMunicipio);
-
-            if (!novoMunicipio.EhValido())
-                ObterErrosValidacao(novoMunicipio);
 
             return novoMunicipio;
         }

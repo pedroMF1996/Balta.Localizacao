@@ -137,8 +137,8 @@ namespace Balta.Localizacao.ApplicationLayer.Testes
             var result = command.EhValido();
 
             // Assert
-            var erros = command.ValidationResult.Errors.Select(e => e.ErrorMessage);
             Assert.False(result);
+            var erros = command.ValidationResult.Errors.Select(e => e.ErrorMessage);
             Assert.Contains(RemoverEstadoCommandValidation.IdRequiredErrorMessage, erros);
         }
     }

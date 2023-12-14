@@ -196,7 +196,19 @@ namespace Balta.Localizacao.ApplicationLayer.Testes
 
         public Estado RetornarEstadoInvalido()
         {
-            return new Estado("11", "RO", "");
+            return new Estado("35", "SP", "");
+        }
+
+        internal Municipio RetornarMunicipioInvalido()
+        {
+            return new Municipio("3500105", "Adamana");
+        }
+        internal Municipio RetornarMunicipioSP()
+        {
+            var estado = RetornarEstadoSP();
+            var municipio = new Municipio("3500105", "Adamana");
+            estado.AdicionarMunicipio(municipio);
+            return municipio;
         }
     }
 }
