@@ -11,6 +11,7 @@ namespace Balta.Localizacao.Domain.Interfaces
         Task AdicionarMunicipios(Municipio municipio);
 
         Estado ObterEstadoPorId(Guid id);
+        Estado ObterEstadoPorCodigoUf(string codigoUf);
         void ExcluirEstado(Estado estado);
         void EditarEstado(Estado estado);
         Task AdicionarEstado(Estado estado);

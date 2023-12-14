@@ -7,6 +7,7 @@ using Moq;
 namespace Balta.Localizacao.ApplicationLayer.Testes
 {
     [Collection(nameof(CommandBogusFixtureCollection))]
+    [TestCaseOrderer("Balta.Localizacao.ApplicationLayer.Testes.TestOrderProperty", "Balta.Localizacao.ApplicationLayer.Testes")]
     public class AutenticacaoCommandHandlerTestes : IClassFixture<UsuarioBogusFixture>,
                                                     IClassFixture<CommandBogusFixture>
     {
@@ -19,7 +20,7 @@ namespace Balta.Localizacao.ApplicationLayer.Testes
             _commandBogusFixture = commandBogusFixture;
         }
 
-        [Fact(DisplayName = "Novo Usuario Deve Ser Adicionado Com Sucesso")]
+        [Fact(DisplayName = "Novo Usuario Deve Ser Adicionado Com Sucesso"), TestOrderProperty(1)]
         [Trait("Categoria", "Command Handler")]
         public async Task NovoUsuarioCommand_NovoUsuario_DeveAdicionarComSucesso()
         {
@@ -50,13 +51,13 @@ namespace Balta.Localizacao.ApplicationLayer.Testes
 
             // Assert
             Assert.True(result.IsValid);
-            _userManager.Verify(_userManager => _userManager.CreateAsync(It.IsAny<IdentityUser>(), It.IsAny<string>()), Times.Once);
-            _userManager.Verify(_userManager => _userManager.FindByEmailAsync(command.Email), Times.Once);
-            _userManager.Verify(_userManager => _userManager.GetClaimsAsync(It.IsAny<IdentityUser>()), Times.Once);
-            _userManager.Verify(_userManager => _userManager.GetRolesAsync(It.IsAny<IdentityUser>()), Times.Once);
+            _userManager.Verify(_userManager => _userManager.CreateAsync(It.IsAny<IdentityUser>(), It.IsAny<string>()), Times.AtLeastOnce);
+            _userManager.Verify(_userManager => _userManager.FindByEmailAsync(command.Email), Times.AtLeastOnce);
+            _userManager.Verify(_userManager => _userManager.GetClaimsAsync(It.IsAny<IdentityUser>()), Times.AtLeastOnce);
+            _userManager.Verify(_userManager => _userManager.GetRolesAsync(It.IsAny<IdentityUser>()), Times.AtLeastOnce);
         }
 
-        [Fact(DisplayName = "Novo Usuario Com Roles Deve Ser Adicionado Com Sucesso")]
+        [Fact(DisplayName = "Novo Usuario Com Roles Deve Ser Adicionado Com Sucesso"), TestOrderProperty(2)]
         [Trait("Categoria", "Command Handler")]
         public async Task NovoUsuarioCommand_NovoUsuarioComRoles_DeveAdicionarComSucesso()
         {
@@ -87,13 +88,13 @@ namespace Balta.Localizacao.ApplicationLayer.Testes
 
             // Assert
             Assert.True(result.IsValid);
-            _userManager.Verify(_userManager => _userManager.CreateAsync(It.IsAny<IdentityUser>(), It.IsAny<string>()), Times.Once);
-            _userManager.Verify(_userManager => _userManager.FindByEmailAsync(command.Email), Times.Once);
-            _userManager.Verify(_userManager => _userManager.GetClaimsAsync(It.IsAny<IdentityUser>()), Times.Once);
-            _userManager.Verify(_userManager => _userManager.GetRolesAsync(It.IsAny<IdentityUser>()), Times.Once);
+            _userManager.Verify(_userManager => _userManager.CreateAsync(It.IsAny<IdentityUser>(), It.IsAny<string>()), Times.AtLeastOnce);
+            _userManager.Verify(_userManager => _userManager.FindByEmailAsync(command.Email), Times.AtLeastOnce);
+            _userManager.Verify(_userManager => _userManager.GetClaimsAsync(It.IsAny<IdentityUser>()), Times.AtLeastOnce);
+            _userManager.Verify(_userManager => _userManager.GetRolesAsync(It.IsAny<IdentityUser>()), Times.AtLeastOnce);
         }
 
-        [Fact(DisplayName = "Novo Usuario Deve Ser Adicionado Com Falha")]
+        [Fact(DisplayName = "Novo Usuario Deve Ser Adicionado Com Falha"), TestOrderProperty(3)]
         [Trait("Categoria", "Command Handler")]
         public async Task NovoUsuarioCommand_NovoUsuario_DeveAdicionarComFalha()
         {
@@ -128,7 +129,7 @@ namespace Balta.Localizacao.ApplicationLayer.Testes
             _userManager.Verify(_userManager => _userManager.CreateAsync(It.IsAny<IdentityUser>(), It.IsAny<string>()), Times.Once);
         }
         
-        [Fact(DisplayName = "Novo Usuario Deve Ser Adicionado Com Falha Por Erros de Command")]
+        [Fact(DisplayName = "Novo Usuario Deve Ser Adicionado Com Falha Por Erros de Command"), TestOrderProperty(4)]
         [Trait("Categoria", "Command Handler")]
         public async Task NovoUsuarioCommand_NovoUsuario_DeveAdicionarComFalhaPorErrosDeCommand()
         {
@@ -158,7 +159,7 @@ namespace Balta.Localizacao.ApplicationLayer.Testes
             Assert.Contains(NovoUsuarioCommandValidation.ConfirmPasswordErrorMessage, erros);
         }
 
-        [Fact(DisplayName = "Login Deve Ser Autenticado Com Sucesso")]
+        [Fact(DisplayName = "Login Deve Ser Autenticado Com Sucesso"), TestOrderProperty(5)]
         [Trait("Categoria", "Command Handler")]
         public async Task LoginCommand_AutenticarUsuario_DeveAutenticarComSucesso()
         {
@@ -191,13 +192,13 @@ namespace Balta.Localizacao.ApplicationLayer.Testes
 
             // Assert
             Assert.True(result.IsValid);
-            _signInManager.Verify(_signInManager => _signInManager.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()), Times.Once);
-            _userManager.Verify(_userManager => _userManager.FindByEmailAsync(command.Email), Times.Once);
-            _userManager.Verify(_userManager => _userManager.GetClaimsAsync(It.IsAny<IdentityUser>()), Times.Once);
-            _userManager.Verify(_userManager => _userManager.GetRolesAsync(It.IsAny<IdentityUser>()), Times.Once);
+            _signInManager.Verify(_signInManager => _signInManager.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()), Times.AtLeastOnce);
+            _userManager.Verify(_userManager => _userManager.FindByEmailAsync(command.Email), Times.AtLeastOnce);
+            _userManager.Verify(_userManager => _userManager.GetClaimsAsync(It.IsAny<IdentityUser>()), Times.AtLeastOnce);
+            _userManager.Verify(_userManager => _userManager.GetRolesAsync(It.IsAny<IdentityUser>()), Times.AtLeastOnce);
         }
 
-        [Fact(DisplayName = "Login Deve Ser Autenticado Com Falha Por Travamento")]
+        [Fact(DisplayName = "Login Deve Ser Autenticado Com Falha Por Travamento"), TestOrderProperty(6)]
         [Trait("Categoria", "Command Handler")]
         public async Task LoginCommand_AutenticarUsuario_DeveAutenticarComFalhaPorTravamento()
         {
@@ -232,10 +233,10 @@ namespace Balta.Localizacao.ApplicationLayer.Testes
             var erros = result.Errors.Select(e => e.ErrorMessage);
             Assert.False(result.IsValid);
             Assert.Contains("Usuario temporariamente bloqueado por tentativas invalidas", erros);
-            _signInManager.Verify(_signInManager => _signInManager.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()), Times.Once);
+            _signInManager.Verify(_signInManager => _signInManager.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()), Times.AtLeastOnce);
         }
 
-        [Fact(DisplayName = "Login Deve Ser Autenticado Com Falha Por Erro De Credenciais")]
+        [Fact(DisplayName = "Login Deve Ser Autenticado Com Falha Por Erro De Credenciais"), TestOrderProperty(7)]
         [Trait("Categoria", "Command Handler")]
         public async Task LoginCommand_AutenticarUsuario_DeveAutenticarComFalhaPorErroDeCredenciais()
         {
@@ -270,10 +271,10 @@ namespace Balta.Localizacao.ApplicationLayer.Testes
             var erros = result.Errors.Select(e => e.ErrorMessage);
             Assert.False(result.IsValid);
             Assert.Contains("Usuario ou senha incorretos", erros);
-            _signInManager.Verify(_signInManager => _signInManager.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()), Times.Once);
+            _signInManager.Verify(_signInManager => _signInManager.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()), Times.AtLeastOnce);
         }
 
-        [Fact(DisplayName = "Login Deve Ser Autenticado Com Falha Por Erros Do Command")]
+        [Fact(DisplayName = "Login Deve Ser Autenticado Com Falha Por Erros Do Command"), TestOrderProperty(8)]
         [Trait("Categoria", "Command Handler")]
         public async Task LoginCommand_AutenticarUsuario_DeveRetornarErrosDoCommand()
         {

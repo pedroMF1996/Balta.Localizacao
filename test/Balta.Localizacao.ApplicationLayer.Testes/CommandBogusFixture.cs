@@ -1,5 +1,6 @@
 ﻿using Balta.Localizacao.ApplicationLayer.Commands.AutenticacaoCommands;
 using Balta.Localizacao.ApplicationLayer.Commands.LocalizacaoCommands;
+using Balta.Localizacao.Domain.Entities;
 using Bogus;
 using Bogus.DataSets;
 
@@ -7,9 +8,8 @@ namespace Balta.Localizacao.ApplicationLayer.Testes
 {
     [CollectionDefinition(nameof(CommandBogusFixtureCollection))]
     public class CommandBogusFixtureCollection : ICollectionFixture<CommandBogusFixture>
-    {
-
-    }
+    { }
+    
     public class CommandBogusFixture
     {
         public NovoUsuarioCommand GerarNovoUsuarioCommand()
@@ -98,12 +98,32 @@ namespace Balta.Localizacao.ApplicationLayer.Testes
             return new RemoverEstadoCommand();
         }
 
-        public AdicionarMunicipioCommand GerarAdicionarMunicipioCommandValido()
+        public AdicionarMunicipioCommand GerarAdicionarMunicipioCommandValidoSP()
         {
             return new AdicionarMunicipioCommand()
             {
                 Codigo = "3500105",
                 CodigoUf = "35",
+                Nome = "Adamantina"
+            };
+        }
+        
+        public AdicionarMunicipioCommand GerarAdicionarMunicipioCommandValidoSPCodigoUfRO()
+        {
+            return new AdicionarMunicipioCommand()
+            {
+                Codigo = "3500105",
+                CodigoUf = "11",
+                Nome = "Adamantina"
+            };
+        }
+        
+        public AdicionarMunicipioCommand GerarAdicionarMunicipioCommandInvalidoCodigoCodigoUfIncompativeis()
+        {
+            return new AdicionarMunicipioCommand()
+            {
+                Codigo = "3500105",
+                CodigoUf = "11",
                 Nome = "Adamantina"
             };
         }
@@ -125,6 +145,17 @@ namespace Balta.Localizacao.ApplicationLayer.Testes
                 Id = Guid.NewGuid(),
                 Codigo = "3500105",
                 CodigoUf = "35",
+                Nome = "Adamantina"
+            };
+        }
+
+        public EditarMunicipioCommand GerarEditarMunicipioCommandInvalidoCodigoCodigoUfIncompativeis()
+        {
+            return new EditarMunicipioCommand()
+            {
+                Id = Guid.NewGuid(),
+                Codigo = "3500105",
+                CodigoUf = "11",
                 Nome = "Adamantina"
             };
         }
@@ -151,6 +182,33 @@ namespace Balta.Localizacao.ApplicationLayer.Testes
         public RemoverMunicipioCommand GerarRemoverMunicipioCommandInvalido()
         {
             return new RemoverMunicipioCommand();
+        }
+
+        public Estado RetornarEstadoSP()
+        {
+            return new Estado("35", "SP", "Sao Paulo");
+        }
+        
+        public Estado RetornarEstadoRO()
+        {
+            return new Estado("11", "RO", "Rondonia");
+        }
+
+        public Estado RetornarEstadoInvalido()
+        {
+            return new Estado("35", "SP", "");
+        }
+
+        internal Municipio RetornarMunicipioInvalido()
+        {
+            return new Municipio("3500105", "Adamana");
+        }
+        internal Municipio RetornarMunicipioSP()
+        {
+            var estado = RetornarEstadoSP();
+            var municipio = new Municipio("3500105", "Adamana");
+            estado.AdicionarMunicipio(municipio);
+            return municipio;
         }
     }
 }
