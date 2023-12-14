@@ -2,6 +2,7 @@
 using Balta.Localizacao.DAL.DbContexts;
 using Balta.Localizacao.Domain.Entities;
 using Balta.Localizacao.Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Balta.Localizacao.DAL.Repository
 {
@@ -30,6 +31,9 @@ namespace Balta.Localizacao.DAL.Repository
         public void EditarEstado(Estado estado)
         {
             _localizacaoDbContext.Estados.Update(estado);
+
+            if(estado.Municipios.Count  > 0)
+                estado.Municipios.ForEach(m => _localizacaoDbContext.Municipios.Update(m));
         }
 
         public void EditarMunicipios(Municipio municipio)
@@ -47,9 +51,14 @@ namespace Balta.Localizacao.DAL.Repository
             _localizacaoDbContext.Municipios.Remove(municipio);
         }
 
+        public Estado ObterEstadoPorCodigoUf(string codigoUf)
+        {
+            return _localizacaoDbContext.Estados.FirstOrDefault(e => e.CodigoUf == codigoUf);
+        }
+
         public Estado ObterEstadoPorId(Guid id)
         {
-            return _localizacaoDbContext.Estados.FirstOrDefault(e => e.Id == id);
+            return _localizacaoDbContext.Estados.Include(e => e.Municipios).FirstOrDefault(e => e.Id == id);
         }
 
         public Municipio ObterMunicipioPorId(Guid id)
