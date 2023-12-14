@@ -17,11 +17,9 @@ namespace Balta.Localizacao.ApplicationLayer.Commands.LocalizacaoCommands.Valida
                 .NotEmpty()
                 .WithMessage(CodigoRequiredErrorMessage)
                 .Length(7)
-                .WithMessage(CodigoLengthErrorMessage);
-            RuleFor(X => X.Codigo) 
+                .WithMessage(CodigoLengthErrorMessage)
                 .Must((command, codigo) => codigo.StartsWith(command.CodigoUf))
-                .WithMessage(CodigoCompatibleCodigoUfErrorMessage)
-                .OverridePropertyName("Codigo");
+                .WithMessage(CodigoCompatibleCodigoUfErrorMessage);
             RuleFor(x => x.Nome)
                 .NotEmpty()
                 .WithMessage(NomeRequiredErrorMessage)
