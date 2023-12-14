@@ -17,14 +17,13 @@ namespace Balta.Localizacao.ApplicationLayer.Commands.LocalizacaoCommands.Valida
             RuleFor(x => x.Id)
                 .NotEqual(Guid.Empty)
                 .WithMessage(IdRequiredErrorMessage);
-            RuleFor(X => X.Codigo.Substring(0, 2))
-                .Equal(x => x.CodigoUf)
-                .WithMessage(CodigoCompatibleCodigoUfErrorMessage);
             RuleFor(x => x.Codigo)
                .NotEmpty()
                .WithMessage(CodigoRequiredErrorMessage)
                .Length(7)
-               .WithMessage(CodigoLengthErrorMessage);
+               .WithMessage(CodigoLengthErrorMessage)
+               .Must((command, codigo) => codigo.StartsWith(command.CodigoUf))
+               .WithMessage(CodigoCompatibleCodigoUfErrorMessage);
             RuleFor(x => x.Nome)
                 .NotEmpty()
                 .WithMessage(NomeRequiredErrorMessage)
