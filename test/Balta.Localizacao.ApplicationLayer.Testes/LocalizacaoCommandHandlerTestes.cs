@@ -242,10 +242,6 @@ namespace Balta.Localizacao.ApplicationLayer.Testes
             // Arrange
             var command = _commandBogusFixture.GerarAdicionarMunicipioCommandValidoSP();
             var estadoRepository = new Mock<EstadoFakeRepository>();
-            estadoRepository.Setup(x => x.AdicionarMunicipios(It.IsAny<Municipio>()))
-                .Returns(Task.CompletedTask);
-            estadoRepository.Setup(x => x.unitOfWork.Commit())
-                .Returns(true);
             var commandHandler = new LocalizacaoCommandHandler(estadoRepository.Object);
 
             // Act
@@ -302,6 +298,29 @@ namespace Balta.Localizacao.ApplicationLayer.Testes
             // Assert
             Assert.False(result.IsValid);
             estadoRepository.Verify(e => e.ObterEstadoPorCodigoUf(It.IsAny<string>()), Times.Never());
+            estadoRepository.Verify(e => e.AdicionarMunicipios(It.IsAny<Municipio>()), Times.Never());
+            estadoRepository.Verify(e => e.unitOfWork.Commit(), Times.Never());
+        }
+
+        [Fact(DisplayName = "Nao Deve Adicionar Municipio Estado Referido Veio Incompleto Do Banco")]
+        [Trait("Categoria", "Command Handler")]
+        public async Task AdicionarMunicipioCommand_AdicionarMunicipio_NaoDeveAdicionarMunicipioEstadoReferidoVeioIncompletoDoBanco()
+        {
+            // Arrange
+            var command = _commandBogusFixture.GerarAdicionarMunicipioCommandValidoSP();
+            var estadoRepository = new Mock<EstadoFakeRepository>();
+            estadoRepository.Setup(x => x.AdicionarMunicipios(It.IsAny<Municipio>()))
+                .Returns(Task.CompletedTask);
+            estadoRepository.Setup(x => x.unitOfWork.Commit())
+                .Returns(true);
+            var commandHandler = new LocalizacaoCommandHandler(estadoRepository.Object);
+
+            // Act
+            var result = await commandHandler.Handle(command, CancellationToken.None);
+
+            // Assert
+            Assert.False(result.IsValid);
+            estadoRepository.Verify(e => e.ObterEstadoPorCodigoUf(It.IsAny<string>()), Times.Once());
             estadoRepository.Verify(e => e.AdicionarMunicipios(It.IsAny<Municipio>()), Times.Never());
             estadoRepository.Verify(e => e.unitOfWork.Commit(), Times.Never());
         }
