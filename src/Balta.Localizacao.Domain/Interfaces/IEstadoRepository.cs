@@ -1,5 +1,6 @@
 ﻿using Balta.Localizacao.Core.Data;
 using Balta.Localizacao.Domain.Entities;
+using Balta.Localizacao.Domain.Interfaces.Specification;
 
 namespace Balta.Localizacao.Domain.Interfaces
 {
@@ -14,6 +15,6 @@ namespace Balta.Localizacao.Domain.Interfaces
         void ExcluirEstado(Estado estado);
         void EditarEstado(Estado estado);
         Task AdicionarEstado(Estado estado);
-
+        Task<IEnumerable<Estado>> BuscarEstados(ISpecification<Estado> specification=null);
     }
 }

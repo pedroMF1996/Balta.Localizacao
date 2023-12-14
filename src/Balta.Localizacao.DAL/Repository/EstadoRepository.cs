@@ -1,7 +1,11 @@
 ﻿using Balta.Localizacao.Core.Data;
+using Balta.Localizacao.Core.DomainObjects;
 using Balta.Localizacao.DAL.DbContexts;
+using Balta.Localizacao.DAL.SpecificationBase;
 using Balta.Localizacao.Domain.Entities;
 using Balta.Localizacao.Domain.Interfaces;
+using Balta.Localizacao.Domain.Interfaces.Specification;
+using Microsoft.EntityFrameworkCore;
 
 namespace Balta.Localizacao.DAL.Repository
 {
@@ -25,6 +29,18 @@ namespace Balta.Localizacao.DAL.Repository
         public async Task AdicionarMunicipios(Municipio municipio)
         {
             await _localizacaoDbContext.Municipios.AddAsync(municipio);
+        }
+
+        public async Task<IEnumerable<Estado>> BuscarEstados(ISpecification<Estado> specification = null)
+        {
+            return  await AplicandoSpecification(specification)
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
+        private IQueryable<Estado> AplicandoSpecification(ISpecification<Estado> spec)
+        {
+            return  SpecificationEvaluator<Estado>.GetQuery(_localizacaoDbContext.Set<Estado>().AsQueryable(), spec);
         }
 
         public void EditarEstado(Estado estado)
