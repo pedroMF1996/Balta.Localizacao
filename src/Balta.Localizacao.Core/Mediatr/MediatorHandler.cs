@@ -13,7 +13,7 @@ namespace Balta.Localizacao.Core.Mediatr
             _mediator = mediator;
         }
 
-        public async Task<ValidationResult> EnviarComando<T>(T comando) where T : Command
+        public async Task<ValidationResult> EnviarComando<T>(T comando) where T : Command //teste de subida
         {
             return await _mediator.Send(comando);
         }
