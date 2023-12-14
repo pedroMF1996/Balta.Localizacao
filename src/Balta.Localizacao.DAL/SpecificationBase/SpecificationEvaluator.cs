@@ -1,7 +1,6 @@
 ﻿using Balta.Localizacao.Core.DomainObjects;
 using Balta.Localizacao.Domain.Interfaces.Specification;
 using Microsoft.EntityFrameworkCore;
-
 namespace Balta.Localizacao.DAL.SpecificationBase
 {
 
@@ -11,11 +10,7 @@ namespace Balta.Localizacao.DAL.SpecificationBase
         {
             var query = inputQuery;
 
-  
-            if (specification.Criteria != null)
-            {
-                query = query.Where(specification.Criteria);
-            }
+            query = Criterio(specification, query);
 
             query = specification.Includes.Aggregate(query,
                                     (current, include) => current.Include(include));
@@ -23,26 +18,52 @@ namespace Balta.Localizacao.DAL.SpecificationBase
             query = specification.IncludeStrings.Aggregate(query,
                                     (current, include) => current.Include(include));
 
+            query = OrderBy(specification, query);
 
-            if (specification.OrderBy != null)
-            {
-                query = query.OrderBy(specification.OrderBy);
-            }
-            else if (specification.OrderByDescending != null)
-            {
-                query = query.OrderByDescending(specification.OrderByDescending);
-            }
+            query = OrderByDesc(specification, query);
 
-            if (specification.GroupBy != null)
-            {
-                query = query.GroupBy(specification.GroupBy).SelectMany(x => x);
-            }
+            query = Pagination(specification, query);
 
+            return query;
+        }
+
+        private static IQueryable<TEntity> Pagination(ISpecification<TEntity> specification, IQueryable<TEntity> query)
+        {
             if (specification.IsPagingEnabled)
             {
                 query = query.Skip(specification.Skip)
                              .Take(specification.Take);
             }
+
+            return query;
+        }
+
+        private static IQueryable<TEntity> OrderByDesc(ISpecification<TEntity> specification, IQueryable<TEntity> query)
+        {
+            if (specification.GroupBy != null)
+            {
+                query = query.GroupBy(specification.GroupBy).SelectMany(x => x);
+            }
+
+            return query;
+        }
+
+        private static IQueryable<TEntity> OrderBy(ISpecification<TEntity> specification, IQueryable<TEntity> query)
+        {
+            if (specification.OrderBy != null)
+            {
+                query = query.OrderBy(specification.OrderBy);
+            }
+            return query;
+        }
+
+        private static IQueryable<TEntity> Criterio(ISpecification<TEntity> specification, IQueryable<TEntity> query)
+        {
+            if (specification.Criteria != null)
+            {
+                query = query.Where(specification.Criteria);
+            }
+
             return query;
         }
     }

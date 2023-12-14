@@ -10,4 +10,8 @@
     <ProjectReference Include="..\Balta.Localizacao.Domain\Balta.Localizacao.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="SpecificationBase\Agregador\" />
+  </ItemGroup>
+
 </Project>
