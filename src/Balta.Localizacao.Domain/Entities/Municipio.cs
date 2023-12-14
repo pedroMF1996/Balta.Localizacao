@@ -14,6 +14,9 @@ namespace Balta.Localizacao.Domain.Entities
 
         protected Municipio()
         {
+            Codigo = string.Empty;
+            CodigoUf = string.Empty;
+            Nome = string.Empty;
         }
 
         public Municipio(string codigo, string nome)

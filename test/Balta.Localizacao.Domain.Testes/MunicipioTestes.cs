@@ -97,9 +97,11 @@ namespace Balta.Localizacao.Domain.Testes
             var municipio = new Municipio("1100015", "Alta Floresta D'Oeste");
             municipio.AssociarEstado(estado);
 
-            // Act && Assert
-            var exception = Assert.Throws<DomainException>(() => municipio.AlterarMunicipio("3500015", "Alta Floresta D'Oeste", "11"));
-            Assert.Equal("Codigo municipio e codigo estado nao sao compativeis.", exception.Message);
+            // Act 
+            municipio.AlterarMunicipio("3500015", "Alta Floresta D'Oeste", "11");
+            
+            // Assert
+            Assert.NotEqual("3500015", municipio.Codigo);
         }
 
         [Fact(DisplayName = "Editar Municipio Editar Nome Com Sucesso")]

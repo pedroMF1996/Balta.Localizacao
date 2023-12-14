@@ -61,8 +61,7 @@ namespace Balta.Localizacao.Domain.Entities.Spacifications
 
         public bool IsSatisfiedBy(string codigo)
         {
-            var specficationResult = codigo.StartsWith(_codigoUf);
-            return specficationResult ? specficationResult : throw new DomainException("Codigo municipio e codigo estado nao sao compativeis.");
+            return codigo.StartsWith(_codigoUf);
         }
     }
     
@@ -77,8 +76,7 @@ namespace Balta.Localizacao.Domain.Entities.Spacifications
 
         public bool IsSatisfiedBy(string codigoUf)
         {
-            var specficationResult = _codigo.StartsWith(codigoUf);
-            return specficationResult ? specficationResult : throw new DomainException("Codigo municipio e codigo estado nao sao compativeis.");
+            return _codigo.StartsWith(codigoUf);
         }
     }
 

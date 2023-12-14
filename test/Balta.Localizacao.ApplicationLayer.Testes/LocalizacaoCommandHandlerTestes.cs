@@ -1,5 +1,6 @@
 ﻿using Balta.Localizacao.ApplicationLayer.Commands.LocalizacaoCommands;
 using Balta.Localizacao.ApplicationLayer.Commands.LocalizacaoCommands.Validations;
+using Balta.Localizacao.Core.DomainObjects;
 using Balta.Localizacao.Domain.Entities;
 using Balta.Localizacao.Domain.Interfaces;
 using Moq;
@@ -304,7 +305,7 @@ namespace Balta.Localizacao.ApplicationLayer.Testes
 
         [Fact(DisplayName = "Nao Deve Adicionar Municipio Estado Referido Veio Incompleto Do Banco")]
         [Trait("Categoria", "Command Handler")]
-        public async Task AdicionarMunicipioCommand_AdicionarMunicipio_NaoDeveAdicionarMunicipioEstadoReferidoVeioIncompletoDoBanco()
+        public async Task AdicionarMunicipioCommand_AdicionarMunicipio_DeveDispararUmaDomainException()
         {
             // Arrange
             var command = _commandBogusFixture.GerarAdicionarMunicipioCommandValidoSP();
@@ -313,9 +314,11 @@ namespace Balta.Localizacao.ApplicationLayer.Testes
                 .Returns(Task.CompletedTask);
             estadoRepository.Setup(x => x.unitOfWork.Commit())
                 .Returns(true);
+            estadoRepository.Setup(x => x.ObterEstadoPorCodigoUf(It.IsAny<string>()))
+                .Returns(_commandBogusFixture.RetornarEstadoRO);
             var commandHandler = new LocalizacaoCommandHandler(estadoRepository.Object);
 
-            // Act
+            // Act 
             var result = await commandHandler.Handle(command, CancellationToken.None);
 
             // Assert

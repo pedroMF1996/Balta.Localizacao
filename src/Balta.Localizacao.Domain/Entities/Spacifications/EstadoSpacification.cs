@@ -86,11 +86,9 @@ namespace Balta.Localizacao.Domain.Entities.Spacifications
 
         public bool IsSatisfiedBy(Municipio novoMunicipio)
         {
-            var spacificationResult = !_municipios.Where(m => m.CodigoUf == _codigoUf 
-                                            && m.Codigo == novoMunicipio.Codigo
-                                            && m.Nome == novoMunicipio.Nome).Any();
-
-            return spacificationResult ? spacificationResult : throw new DomainException("Impossivel aderir novo municipio, registro ja existente");
+            return _municipios.Where(m => m.CodigoUf == _codigoUf
+                                        && m.Codigo == novoMunicipio.Codigo
+                                        && m.Nome == novoMunicipio.Nome).Any();
         }
     }
 }

@@ -87,7 +87,7 @@ namespace Balta.Localizacao.Domain.Entities
         }
 
         private bool VerificarMunicipiosRepetidos(Municipio municipio)
-            => new ExisteMunipiosRepetidosSpacification(Municipios, CodigoUf)
+            => new ExisteMunipiosRepetidosSpacification(Municipios, CodigoUf).Not()
                 .IsSatisfiedBy(municipio);
         
         #endregion

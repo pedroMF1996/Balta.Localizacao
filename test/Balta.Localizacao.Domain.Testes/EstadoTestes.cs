@@ -72,16 +72,18 @@ namespace Balta.Localizacao.Domain.Testes
         
         [Fact(DisplayName = "Nao Deve Adicionar Municipio Repetido")]
         [Trait("Categoria", "Entity")]
-        public void AdicionarMunicipioAEstado_MunicipioRepetido_DeveRetornarException()
+        public void AdicionarMunicipioAEstado_MunicipioRepetido_NaoDeveAdicionarMunicipioRepetido()
         {
             // Arrange
             var municipio = new Municipio("1100015", "Alta Floresta D'Oeste");
             var estado = new Estado("11", "RO", "Rondônia");
             estado.AdicionarMunicipio(municipio);
 
-            // Act, Assert
-            var exception = Assert.Throws<DomainException>(()=>estado.AdicionarMunicipio(municipio));
-            Assert.Equal("Impossivel aderir novo municipio, registro ja existente", exception.Message);
+            // Act 
+            estado.AdicionarMunicipio(municipio);
+            
+            // Assert
+            Assert.Equal(1, estado.Municipios.Count);
         }
 
         [Fact(DisplayName = "Editar Estado SiglaUf Com Sucesso")]
