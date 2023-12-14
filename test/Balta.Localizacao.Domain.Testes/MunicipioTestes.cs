@@ -81,13 +81,11 @@ namespace Balta.Localizacao.Domain.Testes
             var municipio = new Municipio("1100000", "Alta Floresta D'Oeste");
             municipio.AssociarEstado(estado);
 
-            var novoMunicipio = new Municipio("1100015", "Alta Floresta D'Oeste");
-
             // Act
-            municipio.AlterarMunicipio(novoMunicipio);
+            municipio.AlterarMunicipio("1100015", "", "");
 
             // Assert
-            Assert.Equal(municipio.Codigo, novoMunicipio.Codigo);
+            Assert.Equal(municipio.Codigo, "1100015");
         }
         
         [Fact(DisplayName = "Editar Municipio Editar Codigo Com Falha")]
@@ -99,10 +97,8 @@ namespace Balta.Localizacao.Domain.Testes
             var municipio = new Municipio("1100015", "Alta Floresta D'Oeste");
             municipio.AssociarEstado(estado);
 
-            var novoMunicipio = new Municipio("3500015", "Alta Floresta D'Oeste");
-
             // Act && Assert
-            var exception = Assert.Throws<DomainException>(() => municipio.AlterarMunicipio(novoMunicipio));
+            var exception = Assert.Throws<DomainException>(() => municipio.AlterarMunicipio("3500015", "", ""));
             Assert.Equal("Codigo municipio e codigo estado nao sao compativeis.", exception.Message);
         }
 
@@ -118,7 +114,7 @@ namespace Balta.Localizacao.Domain.Testes
             var novoMunicipio = new Municipio("1100015", "Alta Floresta D'Oeste");
 
             // Act
-            municipio.AlterarMunicipio(novoMunicipio);
+            municipio.AlterarMunicipio("", "Alta Floresta D'Oeste", "");
 
             // Assert
             Assert.Equal(municipio.Nome, novoMunicipio.Nome);
@@ -133,13 +129,11 @@ namespace Balta.Localizacao.Domain.Testes
             var municipio = new Municipio("1100015", "Alta Floresta");
             municipio.AssociarEstado(estado);
 
-            var novoMunicipio = new Municipio("1100015", "");
-
             // Act
-            municipio.AlterarMunicipio(novoMunicipio);
+            municipio.AlterarMunicipio("1100015", "", estado.CodigoUf);
 
             // Assert
-            Assert.NotEqual(municipio.Nome, novoMunicipio.Nome);
+            Assert.NotEqual(municipio.Nome, "");
         }
 
         [Fact(DisplayName = "Editar Municipio Editar CodigoUf Com Sucesso")]
@@ -152,15 +146,12 @@ namespace Balta.Localizacao.Domain.Testes
             municipio.AssociarEstado(estado);
 
             var novoEstado = new Estado("35", "SP", "Sao Paulo");
-            var novoMunicipio = new Municipio("3500105", "Adamantina");
-
-            novoEstado.AdicionarMunicipio(novoMunicipio);
 
             // Act
-            municipio.AlterarMunicipio(novoMunicipio);
+            municipio.AlterarMunicipio("3500105", "Adamantina", novoEstado.CodigoUf);
 
             // Assert
-            Assert.Equal(novoMunicipio.CodigoUf, municipio.CodigoUf);
+            Assert.Equal(novoEstado.CodigoUf, municipio.CodigoUf);
         }
     }
 }

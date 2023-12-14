@@ -22,16 +22,16 @@ namespace Balta.Localizacao.Domain.Entities
             NomeUf = nomeUf;
         }
 
-        public void AlterarEstado(Estado novoEstado)
+        public void AlterarEstado(string codigoUf, string siglaUf, string nomeUf)
         {
-            if (VerificarAlterarCodigoUf(novoEstado))
-                AlterarCodigoUf(novoEstado.CodigoUf);
+            if (VerificarAlterarCodigoUf(codigoUf))
+                AlterarCodigoUf(codigoUf);
 
-            if (VerificarAlterarSiglaUf(novoEstado))
-                AlterarSiglaUf(novoEstado.SiglaUf);
+            if (VerificarAlterarSiglaUf(siglaUf))
+                AlterarSiglaUf(siglaUf);
 
-            if (VerificarAlterarNomeUf(novoEstado))
-                AlterarNomeUf(novoEstado.NomeUf);
+            if (VerificarAlterarNomeUf(nomeUf))
+                AlterarNomeUf(nomeUf);
         }
 
         public void AdicionarMunicipio(Municipio municipio)
@@ -55,20 +55,20 @@ namespace Balta.Localizacao.Domain.Entities
         }
 
         #region Metodos_Privados
-        private bool VerificarAlterarCodigoUf(Estado novoEstado)
+        private bool VerificarAlterarCodigoUf(string codigoUf)
             => new NovoEstadoCodigoUfNuloOuVazioSpacification().Not()
                     .And(new NovoEstadoCodigoUfDiferenteDoAtualSpacification(this))
-                        .IsSatisfiedBy(novoEstado);
+                        .IsSatisfiedBy(codigoUf);
 
-        private bool VerificarAlterarSiglaUf(Estado novoEstado)
+        private bool VerificarAlterarSiglaUf(string siglaUf)
             => new NovoEstadoSiglaUfNuloOuVazioSpacification().Not()
                     .And(new NovoEstadoSiglaUfDiferenteDaAtualSpacification(this))
-                        .IsSatisfiedBy(novoEstado);
+                        .IsSatisfiedBy(siglaUf);
 
-        private bool VerificarAlterarNomeUf(Estado estado)
+        private bool VerificarAlterarNomeUf(string nomeUf)
             => new NovoEstadoNomeUfNuloOuVazioSpacification().Not()
                     .And(new NovoEstadoNomeUfDiferenteDaAtualSpacification(this))
-                        .IsSatisfiedBy(estado);
+                        .IsSatisfiedBy(nomeUf);
 
         private void AlterarCodigoUf(string codigoUf)
         {

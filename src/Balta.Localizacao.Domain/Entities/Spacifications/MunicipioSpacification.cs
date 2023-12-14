@@ -4,7 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Balta.Localizacao.Domain.Entities.Spacifications
 {
-    public class NovoMunicipioCodigoUfDiferenteDoAtualSpacification : ISpacification<Municipio>
+    public class NovoMunicipioCodigoUfDiferenteDoAtualSpacification : ISpacification<string>
     {
         private readonly Municipio _municipio;
 
@@ -13,21 +13,21 @@ namespace Balta.Localizacao.Domain.Entities.Spacifications
             _municipio = municipio;
         }
 
-        public bool IsSatisfiedBy(Municipio novoMunicipio)
+        public bool IsSatisfiedBy(string codigoUf)
         {
-            return _municipio.CodigoUf != novoMunicipio.CodigoUf;
+            return _municipio.CodigoUf != codigoUf;
         }
     }
     
-    public class NovoMunicipioCodigoUfNuloOuVazioSpacification : ISpacification<Municipio>
+    public class NovoMunicipioCodigoUfNuloOuVazioSpacification : ISpacification<string>
     {
-        public bool IsSatisfiedBy(Municipio novoMunicipio)
+        public bool IsSatisfiedBy(string codigoUf)
         {
-            return novoMunicipio.CodigoUf.IsNullOrEmpty();
+            return codigoUf.IsNullOrEmpty();
         }
     }
 
-    public class NovoMunicipioCodigoDiferenteDoAtualSpacification : ISpacification<Municipio>
+    public class NovoMunicipioCodigoDiferenteDoAtualSpacification : ISpacification<string>
     {
         private readonly Municipio _municipio;
 
@@ -36,21 +36,21 @@ namespace Balta.Localizacao.Domain.Entities.Spacifications
             _municipio = municipio;
         }
 
-        public bool IsSatisfiedBy(Municipio novoMunicipio)
+        public bool IsSatisfiedBy(string codigo)
         {
-            return _municipio.Codigo != novoMunicipio.Codigo;
+            return _municipio.Codigo != codigo;
         }
     }
 
-    public class NovoMunicipioCodigoNuloOuVazioSpacification : ISpacification<Municipio>
+    public class NovoMunicipioCodigoNuloOuVazioSpacification : ISpacification<string>
     {
-        public bool IsSatisfiedBy(Municipio novoMunicipio)
+        public bool IsSatisfiedBy(string codigo)
         {
-            return novoMunicipio.Codigo.IsNullOrEmpty();
+            return codigo.IsNullOrEmpty();
         }
     }
 
-    public class MunicipioCodigoCompativelComCodigoUfSpacification : ISpacification<Municipio>
+    public class MunicipioCodigoCompativelComCodigoUfSpacification : ISpacification<string>
     {
         private readonly string _codigoUf;
 
@@ -59,14 +59,14 @@ namespace Balta.Localizacao.Domain.Entities.Spacifications
             _codigoUf = codigoUf;
         }
 
-        public bool IsSatisfiedBy(Municipio novoMunicipio)
+        public bool IsSatisfiedBy(string codigo)
         {
-            var specficationResult = novoMunicipio.Codigo.StartsWith(_codigoUf);
+            var specficationResult = codigo.StartsWith(_codigoUf);
             return specficationResult ? specficationResult : throw new DomainException("Codigo municipio e codigo estado nao sao compativeis.");
         }
     }
 
-    public class NovoMunicipioNomeDiferenteDoAtualSpacification : ISpacification<Municipio>
+    public class NovoMunicipioNomeDiferenteDoAtualSpacification : ISpacification<string>
     {
         private readonly Municipio _municipio;
 
@@ -75,17 +75,17 @@ namespace Balta.Localizacao.Domain.Entities.Spacifications
             _municipio = municipio;
         }
 
-        public bool IsSatisfiedBy(Municipio novoMunicipio)
+        public bool IsSatisfiedBy(string nome)
         {
-            return _municipio.Nome != novoMunicipio.Nome;
+            return _municipio.Nome != nome;
         }
     }
 
-    public class NovoMunicipioNomeNuloOuVazioSpacification : ISpacification<Municipio>
+    public class NovoMunicipioNomeNuloOuVazioSpacification : ISpacification<string>
     {
-        public bool IsSatisfiedBy(Municipio entity)
+        public bool IsSatisfiedBy(string nome)
         {
-            return entity.Nome.IsNullOrEmpty();
+            return nome.IsNullOrEmpty();
         }
     }
 }

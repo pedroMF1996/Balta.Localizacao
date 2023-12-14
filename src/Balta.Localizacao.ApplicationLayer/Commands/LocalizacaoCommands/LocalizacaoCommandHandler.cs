@@ -44,7 +44,7 @@ namespace Balta.Localizacao.ApplicationLayer.Commands.LocalizacaoCommands
         public async Task<ValidationResult> Handle(EditarMunicipioCommand message, CancellationToken cancellationToken)
         {
             if (!message.EhValido())
-                return ValidationResult;
+                return message.ValidationResult;
 
             var estado = ObterEstadoPorCodigoUf(message.CodigoUf);
 
@@ -56,12 +56,10 @@ namespace Balta.Localizacao.ApplicationLayer.Commands.LocalizacaoCommands
             if (PossuiErros())
                 return ValidationResult;
 
-            var novoMunicipio = CriarMunicipio(message.Codigo, message.Nome, estado);
-
             if(PossuiErros())
                 return ValidationResult;
 
-            municipio.AlterarMunicipio(novoMunicipio);
+            municipio.AlterarMunicipio(message.Codigo, message.Nome, estado.CodigoUf);
 
             _estadoRepository.EditarMunicipios(municipio);
 
@@ -71,7 +69,7 @@ namespace Balta.Localizacao.ApplicationLayer.Commands.LocalizacaoCommands
         public async Task<ValidationResult> Handle(RemoverMunicipioCommand message, CancellationToken cancellationToken)
         {
             if (!message.EhValido())
-                return ValidationResult;
+                return message.ValidationResult;
 
             var municipio = ObterMunicipioPorId(message.Id);
 
@@ -98,22 +96,14 @@ namespace Balta.Localizacao.ApplicationLayer.Commands.LocalizacaoCommands
         public async Task<ValidationResult> Handle(EditarEstadoCommand message, CancellationToken cancellationToken)
         {
             if (!message.EhValido())
-                return ValidationResult;
+                return message.ValidationResult;
 
             var estado = ObterEstadoPorId(message.Id);
 
             if (PossuiErros())
                 return ValidationResult;
-            
-            var novoEstado = CriarNovoEstado(message.CodigoUf, message.SiglaUf, message.NomeUf);
 
-            if(PossuiErros())
-                return ValidationResult;
-
-            estado.AlterarEstado(novoEstado);
-
-            if (!estado.EhValido())
-                ObterErrosValidacao(estado);
+            estado.AlterarEstado(message.CodigoUf, message.SiglaUf, message.NomeUf);
 
             _estadoRepository.EditarEstado(estado);
 
@@ -123,7 +113,7 @@ namespace Balta.Localizacao.ApplicationLayer.Commands.LocalizacaoCommands
         public async Task<ValidationResult> Handle(RemoverEstadoCommand message, CancellationToken cancellationToken)
         {
             if (!message.EhValido())
-                return ValidationResult;
+                return message.ValidationResult;
 
             var estado = ObterEstadoPorId(message.Id);
 

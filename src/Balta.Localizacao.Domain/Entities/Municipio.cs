@@ -23,16 +23,16 @@ namespace Balta.Localizacao.Domain.Entities
             CodigoUf = string.Empty;
         }
 
-        public void AlterarMunicipio(Municipio novoMunicipio)
+        public void AlterarMunicipio(string codigo, string nome, string codigoUf)
         {
-            if(VerificarAlterarCodigoUf(novoMunicipio)) 
-                AlterarCodigoUf(novoMunicipio.CodigoUf);
+            if(VerificarAlterarCodigoUf(codigoUf)) 
+                AlterarCodigoUf(codigoUf);
 
-            if(VerificarAlterarCodigo(novoMunicipio)) 
-                AlterarCodigo(novoMunicipio.Codigo);
+            if(VerificarAlterarCodigo(codigo)) 
+                AlterarCodigo(codigo);
 
-            if(VerificarAlterarNome(novoMunicipio)) 
-                AlterarNome(novoMunicipio.Nome);
+            if(VerificarAlterarNome(nome)) 
+                AlterarNome(nome);
         }
 
         public void AssociarEstado(Estado estado)
@@ -49,21 +49,21 @@ namespace Balta.Localizacao.Domain.Entities
 
         #region Metodos_Privados
 
-        private bool VerificarAlterarCodigoUf(Municipio novoMunicipio)
+        private bool VerificarAlterarCodigoUf(string codigoUf)
             => new NovoMunicipioCodigoUfNuloOuVazioSpacification().Not()
                     .And(new NovoMunicipioCodigoUfDiferenteDoAtualSpacification(this))
-                    .IsSatisfiedBy(novoMunicipio);
+                    .IsSatisfiedBy(codigoUf);
 
-        private bool VerificarAlterarCodigo(Municipio novoMunicipio)
+        private bool VerificarAlterarCodigo(string codigo)
             => new NovoMunicipioCodigoNuloOuVazioSpacification().Not()
                 .And(new NovoMunicipioCodigoDiferenteDoAtualSpacification(this))
                 .And(new MunicipioCodigoCompativelComCodigoUfSpacification(CodigoUf))
-                    .IsSatisfiedBy(novoMunicipio);
+                    .IsSatisfiedBy(codigo);
 
-        private bool VerificarAlterarNome(Municipio novoMunicipio)
+        private bool VerificarAlterarNome(string nome)
             => new NovoMunicipioNomeNuloOuVazioSpacification().Not()
                 .And(new NovoMunicipioNomeDiferenteDoAtualSpacification(this))
-                    .IsSatisfiedBy(novoMunicipio);
+                    .IsSatisfiedBy(nome);
 
         private void AlterarCodigo(string codigo)
         {
@@ -85,6 +85,6 @@ namespace Balta.Localizacao.Domain.Entities
             public static Municipio CriarMunicipioVazio() => new Municipio();
         }
 
-        #endregion
+        #endregion  
     }
 }

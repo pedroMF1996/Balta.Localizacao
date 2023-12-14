@@ -20,7 +20,7 @@ namespace Balta.Localizacao.Domain.Testes
             Assert.True(result);
         }
         
-        [Fact(DisplayName = "Instanciar Estado Com Sucesso")]
+        [Fact(DisplayName = "Instanciar Estado Vazio Com Sucesso")]
         [Trait("Categoria", "Entity")]
         public void InstanciarEstado_NovoEstado_DeveInstanciarEstadoVazioComSucesso()
         {
@@ -90,13 +90,12 @@ namespace Balta.Localizacao.Domain.Testes
         {
             // Arrange
             var estado = new Estado("11", "RO", "Rondônia");
-            var novoEstado = new Estado("11", "SP", "Rondônia");
 
             // Act
-            estado.AlterarEstado(novoEstado);
+            estado.AlterarEstado("11", "SP", "Rondônia");
 
             // Assert
-            Assert.Equal(estado.SiglaUf, novoEstado.SiglaUf);
+            Assert.Equal(estado.SiglaUf, "SP");
         }
         
         [Fact(DisplayName = "Nao Deve Editar Estado SiglaUf")]
@@ -105,13 +104,12 @@ namespace Balta.Localizacao.Domain.Testes
         {
             // Arrange
             var estado = new Estado("11", "RO", "Rondônia");
-            var novoEstado = new Estado("11", "", "Rondônia");
 
             // Act
-            estado.AlterarEstado(novoEstado);
+            estado.AlterarEstado("11", "", "Rondônia");
 
             // Assert
-            Assert.NotEqual(estado.SiglaUf, novoEstado.SiglaUf);
+            Assert.NotEqual(estado.SiglaUf, "");
         }
 
         [Fact(DisplayName = "Editar Estado CodigoUf Com Sucesso")]
@@ -120,13 +118,12 @@ namespace Balta.Localizacao.Domain.Testes
         {
             // Arrange
             var estado = new Estado("13", "RO", "Rondônia");
-            var novoEstado = new Estado("11", "RO", "Rondônia");
 
             // Act
-            estado.AlterarEstado(novoEstado);
+            estado.AlterarEstado("11", "RO", "Rondônia");
 
             // Assert
-            Assert.Equal(estado.CodigoUf, novoEstado.CodigoUf);
+            Assert.Equal(estado.CodigoUf, "11");
         }
         [Fact(DisplayName = "Nao Deve Editar Estado CodigoUf")]
         [Trait("Categoria", "Entity")]
@@ -134,13 +131,12 @@ namespace Balta.Localizacao.Domain.Testes
         {
             // Arrange
             var estado = new Estado("11", "RO", "Rondônia");
-            var novoEstado = new Estado("", "RO", "Rondônia");
 
             // Act
-            estado.AlterarEstado(novoEstado);
+            estado.AlterarEstado("11", "RO", "Rondônia");
 
             // Assert
-            Assert.NotEqual(estado.CodigoUf, novoEstado.CodigoUf);
+            Assert.NotEqual(estado.CodigoUf, "");
         }
         
         [Fact(DisplayName = "Editar Estado NomeUf Com Sucesso")]
@@ -149,13 +145,12 @@ namespace Balta.Localizacao.Domain.Testes
         {
             // Arrange
             var estado = new Estado("11", "RO", "Rndônia");
-            var novoEstado = new Estado("11", "RO", "Rondônia");
 
             // Act
-            estado.AlterarEstado(novoEstado);
+            estado.AlterarEstado("11", "RO", "Rondônia");
 
             // Assert
-            Assert.Equal(estado.NomeUf, novoEstado.NomeUf);
+            Assert.Equal(estado.NomeUf, "Rondônia");
         }
         
     }

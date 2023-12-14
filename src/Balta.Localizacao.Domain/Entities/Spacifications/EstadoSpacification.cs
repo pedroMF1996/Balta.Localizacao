@@ -4,7 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Balta.Localizacao.Domain.Entities.Spacifications
 {
-    public class NovoEstadoCodigoUfDiferenteDoAtualSpacification : ISpacification<Estado>
+    public class NovoEstadoCodigoUfDiferenteDoAtualSpacification : ISpacification<string>
     {
         private readonly Estado _estado;
 
@@ -13,21 +13,21 @@ namespace Balta.Localizacao.Domain.Entities.Spacifications
             _estado = estado;
         }
 
-        public bool IsSatisfiedBy(Estado novoEstado)
+        public bool IsSatisfiedBy(string codigoUf)
         {
-            return _estado.CodigoUf != novoEstado.CodigoUf;
+            return _estado.CodigoUf != codigoUf;
         }
     }
     
-    public class NovoEstadoCodigoUfNuloOuVazioSpacification : ISpacification<Estado>
+    public class NovoEstadoCodigoUfNuloOuVazioSpacification : ISpacification<string>
     {
-        public bool IsSatisfiedBy(Estado novoEstado)
+        public bool IsSatisfiedBy(string codigoUf)
         {
-            return novoEstado.CodigoUf.IsNullOrEmpty();
+            return codigoUf.IsNullOrEmpty();
         }
     }
 
-    public class NovoEstadoSiglaUfDiferenteDaAtualSpacification : ISpacification<Estado>
+    public class NovoEstadoSiglaUfDiferenteDaAtualSpacification : ISpacification<string>
     {
         private readonly Estado _estado;
 
@@ -36,21 +36,21 @@ namespace Balta.Localizacao.Domain.Entities.Spacifications
             _estado = estado;
         }
 
-        public bool IsSatisfiedBy(Estado novoEstado)
+        public bool IsSatisfiedBy(string siglaUf)
         {
-            return _estado.SiglaUf != novoEstado.SiglaUf;
+            return _estado.SiglaUf != siglaUf;
         }
     }
     
-    public class NovoEstadoSiglaUfNuloOuVazioSpacification : ISpacification<Estado>
+    public class NovoEstadoSiglaUfNuloOuVazioSpacification : ISpacification<string>
     {
-        public bool IsSatisfiedBy(Estado novoEstado)
+        public bool IsSatisfiedBy(string siglaUf)
         {
-            return novoEstado.SiglaUf.IsNullOrEmpty();
+            return siglaUf.IsNullOrEmpty();
         }
     }
 
-    public class NovoEstadoNomeUfDiferenteDaAtualSpacification : ISpacification<Estado>
+    public class NovoEstadoNomeUfDiferenteDaAtualSpacification : ISpacification<string>
     {
         private readonly Estado _estado;
 
@@ -59,17 +59,17 @@ namespace Balta.Localizacao.Domain.Entities.Spacifications
             _estado = estado;
         }
 
-        public bool IsSatisfiedBy(Estado novoEstado)
+        public bool IsSatisfiedBy(string nomeUf)
         {
-            return _estado.NomeUf != novoEstado.NomeUf;
+            return _estado.NomeUf != nomeUf;
         }
     }
     
-    public class NovoEstadoNomeUfNuloOuVazioSpacification : ISpacification<Estado>
+    public class NovoEstadoNomeUfNuloOuVazioSpacification : ISpacification<string>
     {
-        public bool IsSatisfiedBy(Estado novoEstado)
+        public bool IsSatisfiedBy(string nomeUf)
         {
-            return novoEstado.NomeUf.IsNullOrEmpty();
+            return nomeUf.IsNullOrEmpty();
         }
     }
 
