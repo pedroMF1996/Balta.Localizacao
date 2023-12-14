@@ -65,6 +65,22 @@ namespace Balta.Localizacao.Domain.Entities.Spacifications
             return specficationResult ? specficationResult : throw new DomainException("Codigo municipio e codigo estado nao sao compativeis.");
         }
     }
+    
+    public class MunicipioCodigoCompativelComCodigoUfAssociarEstadoSpacification : ISpacification<string>
+    {
+        private readonly string _codigo;
+
+        public MunicipioCodigoCompativelComCodigoUfAssociarEstadoSpacification(string codigo)
+        {
+            _codigo = codigo;
+        }
+
+        public bool IsSatisfiedBy(string codigoUf)
+        {
+            var specficationResult = _codigo.StartsWith(codigoUf);
+            return specficationResult ? specficationResult : throw new DomainException("Codigo municipio e codigo estado nao sao compativeis.");
+        }
+    }
 
     public class NovoMunicipioNomeDiferenteDoAtualSpacification : ISpacification<string>
     {

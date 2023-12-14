@@ -25,10 +25,10 @@ namespace Balta.Localizacao.Domain.Entities
 
         public void AlterarMunicipio(string codigo, string nome, string codigoUf)
         {
-            if(VerificarAlterarCodigoUf(codigoUf)) 
+            if(VerificarAlterarCodigoUf(codigoUf, codigo)) 
                 AlterarCodigoUf(codigoUf);
 
-            if(VerificarAlterarCodigo(codigo)) 
+            if(VerificarAlterarCodigo(codigo, codigoUf)) 
                 AlterarCodigo(codigo);
 
             if(VerificarAlterarNome(nome)) 
@@ -37,8 +37,11 @@ namespace Balta.Localizacao.Domain.Entities
 
         public void AssociarEstado(Estado estado)
         {
-            CodigoUf = estado.CodigoUf;
-            Estado = estado;
+            if (VerificarAlterarCodigoUf(estado.CodigoUf, Codigo))
+            {
+                CodigoUf = estado.CodigoUf;
+                Estado = estado;
+            }
         }
 
         public override bool EhValido()
@@ -49,15 +52,16 @@ namespace Balta.Localizacao.Domain.Entities
 
         #region Metodos_Privados
 
-        private bool VerificarAlterarCodigoUf(string codigoUf)
+        private bool VerificarAlterarCodigoUf(string codigoUf, string codigo)
             => new NovoMunicipioCodigoUfNuloOuVazioSpacification().Not()
                     .And(new NovoMunicipioCodigoUfDiferenteDoAtualSpacification(this))
+                    .And(new MunicipioCodigoCompativelComCodigoUfAssociarEstadoSpacification(codigo))
                     .IsSatisfiedBy(codigoUf);
 
-        private bool VerificarAlterarCodigo(string codigo)
+        private bool VerificarAlterarCodigo(string codigo, string codigoUf)
             => new NovoMunicipioCodigoNuloOuVazioSpacification().Not()
                 .And(new NovoMunicipioCodigoDiferenteDoAtualSpacification(this))
-                .And(new MunicipioCodigoCompativelComCodigoUfSpacification(CodigoUf))
+                .And(new MunicipioCodigoCompativelComCodigoUfSpacification(codigoUf))
                     .IsSatisfiedBy(codigo);
 
         private bool VerificarAlterarNome(string nome)

@@ -17,7 +17,7 @@ namespace Balta.Localizacao.ApplicationLayer.Testes
         public void AdicionarMunicipioCommand_CriarCommand_CriarCommandComSucesso()
         {
             // Arrange
-            var command = _commandBogusFixture.GerarAdicionarMunicipioCommandValido();
+            var command = _commandBogusFixture.GerarAdicionarMunicipioCommandValidoSP();
 
             // Act
             var result = command.EhValido();

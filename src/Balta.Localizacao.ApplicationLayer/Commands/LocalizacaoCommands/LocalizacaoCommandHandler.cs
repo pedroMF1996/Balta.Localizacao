@@ -86,7 +86,7 @@ namespace Balta.Localizacao.ApplicationLayer.Commands.LocalizacaoCommands
             if (!message.EhValido())
                 return message.ValidationResult;
 
-            var estado = CriarNovoEstado(message.CodigoUf, message.SiglaUf, message.NomeUf);
+            var estado = new Estado(message.CodigoUf, message.SiglaUf, message.NomeUf);
 
             await _estadoRepository.AdicionarEstado(estado);
 
@@ -134,7 +134,10 @@ namespace Balta.Localizacao.ApplicationLayer.Commands.LocalizacaoCommands
             var estado = _estadoRepository.ObterEstadoPorCodigoUf(codigoUf);
 
             if (estado == null)
+            {
                 AdicionarErro("Estado referido nao encontrado");
+                return estado;
+            }
 
             if (!estado.EhValido())
                 ObterErrosValidacao(estado);
@@ -146,23 +149,16 @@ namespace Balta.Localizacao.ApplicationLayer.Commands.LocalizacaoCommands
         {
             var estado = _estadoRepository.ObterEstadoPorId(id);
 
-            if (estado == null)
+            if (estado is null)
+            {
                 AdicionarErro("Municipio nao encontrado");
+                return estado;
+            }
 
             if (!estado.EhValido())
                 ObterErrosValidacao(estado);
 
             return estado;
-        }
-
-        private Estado CriarNovoEstado(string codigoUf, string siglaUf, string nomeUf)
-        {
-            var novoEstado = new Estado(codigoUf, siglaUf, nomeUf);
-
-            if (!novoEstado.EhValido())
-                ObterErrosValidacao(novoEstado);
-
-            return novoEstado;
         }
 
         #endregion

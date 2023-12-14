@@ -98,12 +98,22 @@ namespace Balta.Localizacao.ApplicationLayer.Testes
             return new RemoverEstadoCommand();
         }
 
-        public AdicionarMunicipioCommand GerarAdicionarMunicipioCommandValido()
+        public AdicionarMunicipioCommand GerarAdicionarMunicipioCommandValidoSP()
         {
             return new AdicionarMunicipioCommand()
             {
                 Codigo = "3500105",
                 CodigoUf = "35",
+                Nome = "Adamantina"
+            };
+        }
+        
+        public AdicionarMunicipioCommand GerarAdicionarMunicipioCommandValidoSPCodigoUfRO()
+        {
+            return new AdicionarMunicipioCommand()
+            {
+                Codigo = "3500105",
+                CodigoUf = "11",
                 Nome = "Adamantina"
             };
         }
@@ -174,9 +184,19 @@ namespace Balta.Localizacao.ApplicationLayer.Testes
             return new RemoverMunicipioCommand();
         }
 
-        public Estado RetornarEstado()
+        public Estado RetornarEstadoSP()
         {
-            return new Estado("11", "RO", "Rondônia");
+            return new Estado("35", "SP", "Sao Paulo");
+        }
+        
+        public Estado RetornarEstadoRO()
+        {
+            return new Estado("11", "RO", "Rondonia");
+        }
+
+        public Estado RetornarEstadoInvalido()
+        {
+            return new Estado("11", "RO", "");
         }
     }
 }

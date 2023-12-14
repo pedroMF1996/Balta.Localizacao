@@ -1,10 +1,7 @@
 ﻿using Balta.Localizacao.ApplicationLayer.Commands.LocalizacaoCommands;
 using Balta.Localizacao.ApplicationLayer.Commands.LocalizacaoCommands.Validations;
-using Balta.Localizacao.DAL.DbContexts;
-using Balta.Localizacao.DAL.Repository;
 using Balta.Localizacao.Domain.Entities;
 using Balta.Localizacao.Domain.Interfaces;
-using Microsoft.EntityFrameworkCore;
 using Moq;
 using Moq.AutoMock;
 
@@ -72,7 +69,7 @@ namespace Balta.Localizacao.ApplicationLayer.Testes
 
             var estadoRepository = new Mock<EstadoFakeRepository>();
             estadoRepository.Setup(x => x.ObterEstadoPorId(It.IsAny<Guid>()))
-                .Returns(_commandBogusFixture.RetornarEstado());
+                .Returns(_commandBogusFixture.RetornarEstadoSP());
             estadoRepository.Setup(x => x.unitOfWork.Commit())
                 .Returns(true);
 
@@ -94,10 +91,6 @@ namespace Balta.Localizacao.ApplicationLayer.Testes
             // Arrange
             var command = _commandBogusFixture.GerarEditarEstadoCommandInvalido();
             var estadoRepository = new Mock<EstadoFakeRepository>();
-            estadoRepository.Setup(x => x.ObterEstadoPorId(It.IsAny<Guid>()))
-                .Returns(_commandBogusFixture.RetornarEstado());
-            estadoRepository.Setup(x => x.unitOfWork.Commit())
-                .Returns(true);
             var commandHandler = new LocalizacaoCommandHandler(estadoRepository.Object);
 
             // Act
@@ -114,6 +107,47 @@ namespace Balta.Localizacao.ApplicationLayer.Testes
             estadoRepository.Verify(e => e.EditarEstado(It.IsAny<Estado>()), Times.Never());
             estadoRepository.Verify(e => e.unitOfWork.Commit(), Times.Never());
         }
+        
+        [Fact(DisplayName = "Nao Deve Editar CodigoUf Estado Dados Errados Vindos Do Banco")]
+        [Trait("Categoria", "Command Handler")]
+        public async Task EditarEstadoCommand_EditarCodigoUfEstado_DeveRetornarErrosDeValidacaoDadosVindosDoBancoCommand()
+        {
+            // Arrange
+            var command = _commandBogusFixture.GerarEditarEstadoCommandValido();
+            var estadoRepository = new Mock<EstadoFakeRepository>();
+            estadoRepository.Setup(x => x.ObterEstadoPorId(It.IsAny<Guid>()))
+             .Returns(_commandBogusFixture.RetornarEstadoInvalido());
+
+            var commandHandler = new LocalizacaoCommandHandler(estadoRepository.Object);
+
+            // Act
+            var result = await commandHandler.Handle(command, CancellationToken.None);
+
+            // Assert
+            Assert.False(result.IsValid);
+            estadoRepository.Verify(e => e.ObterEstadoPorId(It.IsAny<Guid>()), Times.Once());
+            estadoRepository.Verify(e => e.EditarEstado(It.IsAny<Estado>()), Times.Never());
+            estadoRepository.Verify(e => e.unitOfWork.Commit(), Times.Never());
+        }
+        
+        [Fact(DisplayName = "Nao Deve Editar CodigoUf Estado, Estado Nao Encontrado")]
+        [Trait("Categoria", "Command Handler")]
+        public async Task EditarEstadoCommand_EditarCodigoUfEstado_DeveRetornarErrosDeValidacaoDadoDoBancoNaoRetornadoCommand()
+        {
+            // Arrange
+            var command = _commandBogusFixture.GerarEditarEstadoCommandValido();
+            var estadoRepository = new Mock<EstadoFakeRepository>();
+            var commandHandler = new LocalizacaoCommandHandler(estadoRepository.Object);
+
+            // Act
+            var result = await commandHandler.Handle(command, CancellationToken.None);
+
+            // Assert
+            Assert.False(result.IsValid);
+            estadoRepository.Verify(e => e.ObterEstadoPorId(It.IsAny<Guid>()), Times.Once());
+            estadoRepository.Verify(e => e.EditarEstado(It.IsAny<Estado>()), Times.Never());
+            estadoRepository.Verify(e => e.unitOfWork.Commit(), Times.Never());
+        }
 
         [Fact(DisplayName = "Remover Estado Com Sucesso")]
         [Trait("Categoria", "Command Handler")]
@@ -123,7 +157,7 @@ namespace Balta.Localizacao.ApplicationLayer.Testes
             var command = _commandBogusFixture.GerarRemoverEstadoCommandValido();
             var estadoRepository = new Mock<EstadoFakeRepository>();
             estadoRepository.Setup(x => x.ObterEstadoPorId(It.IsAny<Guid>()))
-                .Returns(_commandBogusFixture.RetornarEstado());
+                .Returns(_commandBogusFixture.RetornarEstadoSP());
             estadoRepository.Setup(x => x.unitOfWork.Commit())
                 .Returns(true);
             var commandHandler = new LocalizacaoCommandHandler(estadoRepository.Object);
@@ -135,6 +169,141 @@ namespace Balta.Localizacao.ApplicationLayer.Testes
             Assert.True(result.IsValid);
             estadoRepository.Verify(e => e.ExcluirEstado(It.IsAny<Estado>()), Times.Once());
             estadoRepository.Verify(e => e.unitOfWork.Commit(), Times.Once());
+        }
+        
+        [Fact(DisplayName = "Nao Deve Remover Estado")]
+        [Trait("Categoria", "Command Handler")]
+        public async Task RemoverEstadoCommandInvalido_RemoverEstado_NaoDeveRemoverEstado()
+        {
+            // Arrange
+            var command = _commandBogusFixture.GerarRemoverEstadoCommandInvalido();
+            var estadoRepository = new Mock<EstadoFakeRepository>();
+            var commandHandler = new LocalizacaoCommandHandler(estadoRepository.Object);
+
+            // Act
+            var result = await commandHandler.Handle(command, CancellationToken.None);
+
+            // Assert
+            var erros = result.Errors.Select(e => e.ErrorMessage);
+            Assert.False(result.IsValid);
+            Assert.Contains(RemoverEstadoCommandValidation.IdRequiredErrorMessage, erros);
+            estadoRepository.Verify(e => e.ExcluirEstado(It.IsAny<Estado>()), Times.Never());
+            estadoRepository.Verify(e => e.unitOfWork.Commit(), Times.Never());
+        }
+
+        [Fact(DisplayName = "Nao Deve Remover Estado, Estado Nao Encontrado")]
+        [Trait("Categoria", "Command Handler")]
+        public async Task RemoverEstadoCommand_RemoverCodigoUfEstado_DeveRetornarErrosDeValidacaoDadoDoBancoNaoRetornadoCommand()
+        {
+            // Arrange
+            var command = _commandBogusFixture.GerarRemoverEstadoCommandValido();
+            var estadoRepository = new Mock<EstadoFakeRepository>();
+            var commandHandler = new LocalizacaoCommandHandler(estadoRepository.Object);
+
+            // Act
+            var result = await commandHandler.Handle(command, CancellationToken.None);
+
+            // Assert
+            Assert.False(result.IsValid);
+            estadoRepository.Verify(e => e.ObterEstadoPorId(It.IsAny<Guid>()), Times.Once());
+            estadoRepository.Verify(e => e.ExcluirEstado(It.IsAny<Estado>()), Times.Never());
+            estadoRepository.Verify(e => e.unitOfWork.Commit(), Times.Never());
+        }
+
+        [Fact(DisplayName = "Adicionar Municipio Com Sucesso")]
+        [Trait("Categoria", "Command Handler")]
+        public async Task AdicionarMunicipioCommand_AdicionarMunicipio_DeveAdicionarMunicipioComSucesso()
+        {
+            // Arrange
+            var command = _commandBogusFixture.GerarAdicionarMunicipioCommandValidoSP();
+            var estadoRepository = new Mock<EstadoFakeRepository>();
+            estadoRepository.Setup(x => x.ObterEstadoPorCodigoUf(It.IsAny<string>()))
+                .Returns(_commandBogusFixture.RetornarEstadoSP());
+            estadoRepository.Setup(x => x.AdicionarMunicipios(It.IsAny<Municipio>()))
+                .Returns(Task.CompletedTask);
+            estadoRepository.Setup(x => x.unitOfWork.Commit())
+                .Returns(true);
+            var commandHandler = new LocalizacaoCommandHandler(estadoRepository.Object);
+
+            // Act
+            var result = await commandHandler.Handle(command, CancellationToken.None);
+
+            // Assert
+            Assert.True(result.IsValid);
+            estadoRepository.Verify(e => e.ObterEstadoPorCodigoUf(It.IsAny<string>()), Times.Once());
+            estadoRepository.Verify(e => e.AdicionarMunicipios(It.IsAny<Municipio>()), Times.Once());
+            estadoRepository.Verify(e => e.unitOfWork.Commit(), Times.Once());
+        }
+
+        [Fact(DisplayName = "Nao Deve Adicionar Municipio Estado Referido Nao Encontrado")]
+        [Trait("Categoria", "Command Handler")]
+        public async Task AdicionarMunicipioCommand_AdicionarMunicipio_NaoDeveAdicionarMunicipioEstadoReferidoNaoEncontrado()
+        {
+            // Arrange
+            var command = _commandBogusFixture.GerarAdicionarMunicipioCommandValidoSP();
+            var estadoRepository = new Mock<EstadoFakeRepository>();
+            estadoRepository.Setup(x => x.AdicionarMunicipios(It.IsAny<Municipio>()))
+                .Returns(Task.CompletedTask);
+            estadoRepository.Setup(x => x.unitOfWork.Commit())
+                .Returns(true);
+            var commandHandler = new LocalizacaoCommandHandler(estadoRepository.Object);
+
+            // Act
+            var result = await commandHandler.Handle(command, CancellationToken.None);
+
+            // Assert
+            Assert.False(result.IsValid);
+            estadoRepository.Verify(e => e.ObterEstadoPorCodigoUf(It.IsAny<string>()), Times.Once());
+            estadoRepository.Verify(e => e.AdicionarMunicipios(It.IsAny<Municipio>()), Times.Never());
+            estadoRepository.Verify(e => e.unitOfWork.Commit(), Times.Never());
+        }
+        
+        
+        [Fact(DisplayName = "Nao Deve Adicionar Municipio Command Invalido")]
+        [Trait("Categoria", "Command Handler")]
+        public async Task AdicionarMunicipioCommandInvalido_AdicionarMunicipio_NaoDeveAdicionarMunicipioInvalido()
+        {
+            // Arrange
+            var command = _commandBogusFixture.GerarAdicionarMunicipioCommandInvalido();
+            var estadoRepository = new Mock<EstadoFakeRepository>();
+            var commandHandler = new LocalizacaoCommandHandler(estadoRepository.Object);
+
+            // Act
+            var result = await commandHandler.Handle(command, CancellationToken.None);
+
+            // Assert
+            var erros = command.ValidationResult.Errors.Select(e => e.ErrorMessage);
+            Assert.False(result.IsValid);
+            Assert.Contains(AdicionarMunicipioCommandValidation.NomeRequiredErrorMessage, erros);
+            Assert.Contains(AdicionarMunicipioCommandValidation.CodigoUfLengthErrorMessage, erros);
+            Assert.Contains(AdicionarMunicipioCommandValidation.CodigoUfRequiredErrorMessage, erros);
+            Assert.Contains(AdicionarMunicipioCommandValidation.CodigoRequiredErrorMessage, erros);
+            Assert.Contains(AdicionarMunicipioCommandValidation.CodigoLengthErrorMessage, erros);
+            estadoRepository.Verify(e => e.ObterEstadoPorCodigoUf(It.IsAny<string>()), Times.Never());
+            estadoRepository.Verify(e => e.AdicionarMunicipios(It.IsAny<Municipio>()), Times.Never());
+            estadoRepository.Verify(e => e.unitOfWork.Commit(), Times.Never());
+        }
+        
+        
+        [Fact(DisplayName = "Nao Deve Adicionar Municipio CodigoUf Incompativel Invalido")]
+        [Trait("Categoria", "Command Handler")]
+        public async Task AdicionarMunicipioCommandInvalido_AdicionarMunicipio_NaoDeveAdicionarMunicipioCodigoUfIncompativelInvalido()
+        {
+            // Arrange
+            var command = _commandBogusFixture.GerarAdicionarMunicipioCommandInvalido();
+            var estadoRepository = new Mock<EstadoFakeRepository>();
+            estadoRepository.Setup(x => x.ObterEstadoPorCodigoUf(It.IsAny<string>()))
+                .Returns(_commandBogusFixture.RetornarEstadoSP());
+            var commandHandler = new LocalizacaoCommandHandler(estadoRepository.Object);
+
+            // Act
+            var result = await commandHandler.Handle(command, CancellationToken.None);
+
+            // Assert
+            Assert.False(result.IsValid);
+            estadoRepository.Verify(e => e.ObterEstadoPorCodigoUf(It.IsAny<string>()), Times.Never());
+            estadoRepository.Verify(e => e.AdicionarMunicipios(It.IsAny<Municipio>()), Times.Never());
+            estadoRepository.Verify(e => e.unitOfWork.Commit(), Times.Never());
         }
     }
 }
